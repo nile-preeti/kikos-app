@@ -337,7 +337,7 @@ const BookTaxiScreen = props => {
             )}
           </View>
         ) : (
-          <View style={{marginTop: 40}}>
+          <View style={{marginTop: 40,width:'90%'}}>
             <View style={{height: 350, width: 350, alignSelf: 'center'}}>
               <Image
                 resizeMode="stretch"
@@ -354,9 +354,9 @@ const BookTaxiScreen = props => {
                 fontWeight: '600',
                 textAlign: 'center',
               }}>
-              No data found
+              To access book taxi you need an account.
             </Text>
-            {/* <CustomButton
+            <CustomButton
             borderColor={'#83CDFD'}
             title={'Login / Signup'}
             onPress={() => {
@@ -364,7 +364,7 @@ const BookTaxiScreen = props => {
               dispatch(onLogoutUser());
             }}
             backgroundColor={COLORS.Primary_Blue}
-          /> */}
+          />
           </View>
         )}
       </View>

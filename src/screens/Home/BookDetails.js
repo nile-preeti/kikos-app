@@ -498,7 +498,7 @@ const BookDetails = props => {
                   fontWeight: '600',
                   textAlign: 'center',
                 }}>
-                To Book An Appointment For {tourdetails?.title}.
+                To book an tour for {tourdetails?.title}.
               </Text>
               <Text
                 style={{

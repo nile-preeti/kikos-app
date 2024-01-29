@@ -344,7 +344,7 @@ const[counts,SetCounts]=useState('');
               fontWeight: '600',
               textAlign: 'center',
             }}>
-            To access this section you need a account signup / login
+            To access photo booth you need a account.
           </Text>
           <CustomButton
             borderColor={'#83CDFD'}

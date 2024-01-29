@@ -26,7 +26,7 @@ import {
 import {WebView} from 'react-native-webview';
 import {dimensions} from '../../utility/Mycolors';
 
-const CustomDrawer = props => {
+const CustomDrawer = (props) => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user.user_details);
   const [name, setname] = useState('John Dev.');

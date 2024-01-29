@@ -42,9 +42,9 @@ const ContactUs = props => {
     let phoneNumber = '';
 
     if (Platform.OS === 'android') {
-      phoneNumber = 'tel:' + num;
+      phoneNumber = 'tel:'+"+1"+ num;
     } else {
-      phoneNumber = 'tel:' + num;
+      phoneNumber = 'tel:'+"+1"+ num;
       // phoneNumber = 'telprompt:${' + num + '}';
     }
     Linking.openURL(phoneNumber);
