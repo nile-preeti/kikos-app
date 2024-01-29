@@ -13,6 +13,8 @@ import RequestAFreeCallback from '../screens/Home/RequestAFreeCallback';
 import ProfileStack from './ProfileStack';
 import ContactUs from '../screens/ContactUs/ContactUs';
 import {createStackNavigator} from '@react-navigation/stack';
+import MyTour from '../screens/Home/MyTour';
+import ConfirmedTourDetails from '../screens/BookTour/ConfirmedTourDetails';
  
 const Stack = createStackNavigator();
 const config = {
@@ -228,7 +230,52 @@ const HomeStack=()=> {
             }
           }
         }} />
-
+  <Stack.Screen name="MyTour" component={MyTour}  options={{
+          headerShown: false,
+          transitionSpec: {
+            open: config,
+            close: closeConfig
+          },
+          gestureEnabled: true,
+          gestureDirection: 'vertical',
+          cardStyleInterpolator: ({ current, layouts }) => {
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateY: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.height, 0],
+                    }),
+                  },
+                ],
+              },
+            }
+          }
+        }} />
+         <Stack.Screen name='ConfirmedTourDetails' component={ConfirmedTourDetails}  options={{
+          headerShown: false,
+          transitionSpec: {
+            open: config,
+            close: closeConfig
+          },
+          gestureEnabled: true,
+          gestureDirection: 'vertical',
+          cardStyleInterpolator: ({ current, layouts }) => {
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateY: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.height, 0],
+                    }),
+                  },
+                ],
+              },
+            }
+          }
+        }} />
     </Stack.Navigator>
   );
 };

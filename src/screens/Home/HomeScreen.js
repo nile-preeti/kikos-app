@@ -100,6 +100,7 @@ const HomeScreen = props => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user.user_details);
   const [DATA, setDATA] = useState([]);
+  
   const [edit, setedit] = useState(false);
   const [name, setname] = useState('');
   const [phone, setphone] = useState('');
@@ -125,6 +126,7 @@ const[calendatData,setCalendatData]=useState([]);
     if (err == null) {
       if (responseJson.status == true) {
         setDATA(responseJson.data);
+        
       } else {
         setalert_sms(responseJson.message);
         setMy_Alert(true);
@@ -313,8 +315,9 @@ const[calendatData,setCalendatData]=useState([]);
                                 fontSize: 14,
                                 fontFamily: FONTS.bold,
                               }}>
-                              US${item?.under_10_age_price} – /US$
-                              {item?.age_60_price}
+                              {
+                              item?.same_for_all != "" ?  "US$"+item?.same_for_all : "US$"+item?.under_10_age_price +" – /US$"+item?.age_60_price
+                            }
                             </Text>
                           </LinearGradient>
                           <LinearGradient

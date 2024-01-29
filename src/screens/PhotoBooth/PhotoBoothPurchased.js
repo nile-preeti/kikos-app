@@ -29,6 +29,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
 import {ScrollView} from 'react-native-gesture-handler';
+import PaymentWebView from '../../components/PaymentWebView';
 
 const PhotoBoothPurchased = props => {
   const user = useSelector(state => state.user.user_details);
@@ -459,6 +460,10 @@ const PhotoBoothPurchased = props => {
               txtStyle={{color: '#CECECE', fontSize: 14, fontWeight: '400'}}
               backgroundColor={'#FFFFFF'}
               title={'Purchase At $23.00'}
+              onPress={()=>{ console.log("ONPRESS");
+              props.navigation.navigate('PurchaseReview',{type:'photobooth'})
+              // <PaymentWebView dispatch={type='photobooth'}/>
+            }}
             />
             <CustomButtonRound
             stle={{width:'90%'}}

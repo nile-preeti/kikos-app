@@ -8,6 +8,8 @@ const COLORS = {
   primary_white:'#EAEDF7',
   grey:'#4F5168',
   secondary_blue:'#426FB5',
+  red:'#FF0000',
+  BORDER_GREY:'#CECECE'
 
 
 };

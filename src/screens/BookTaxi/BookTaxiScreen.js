@@ -243,7 +243,7 @@ const BookTaxiScreen = props => {
                             <TouchableOpacity
                               style={styles.callContainer}
                               onPress={() => {
-                                dialCall(item?.mobile);
+                                dialCall('(808)206-2205');
                               }}>
                               <Image source={images.callicon} />
                             </TouchableOpacity>

@@ -27,6 +27,7 @@ export const photo_booth_listing = 'photo-booth-listing';
 export const photo_booth_details ='photo-booth-details';
 export const timezone_list = 'TimeZoneList';
 export const Photo_BoothPurchase_Listing = 'Photo-BoothPurchase-Listing';
+export const confirmed_tour='confirmed-tour';
 
 export const verify_otp_res = 'apicontroller/verify_otp_res'
 export const facilities = 'apicontroller/facilities'

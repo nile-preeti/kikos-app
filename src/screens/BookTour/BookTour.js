@@ -34,6 +34,7 @@ const BookTour = props => {
   const [alert_sms, setalert_sms] = useState('');
   const [loading, setLoading] = useState(false);
   const [horizontalData, setHorizontalData] = useState([]);
+  const[popularData,setPopularData]=useState([]);
   const [tourCountValue, setTourCountValue] = useState('');
 
   const [openState, setopenState] = useState(false);
@@ -101,6 +102,7 @@ const BookTour = props => {
       if (responseJson.status == true) {
         setHorizontalData(responseJson.data);
         setTourCountValue(responseJson);
+        setPopularData(responseJson.popular_tour)
       } else {
         setalert_sms(responseJson.message);
         setMy_Alert(true);
@@ -186,10 +188,10 @@ const BookTour = props => {
                               fontWeight: '700',
                               fontSize: 14,
                               fontFamily: FONTS.bold,
-                            }}>
-                            US${item?.under_10_age_price} – /US$
-                            {item?.age_60_price}
-                          </Text>
+                            }}>{
+                              item?.same_for_all != "" ?  "US$"+item?.same_for_all : "US$"+item?.under_10_age_price +" – /US$"+item?.age_60_price
+                            }
+                            </Text>
                         </LinearGradient>
                         <LinearGradient
                           style={{
@@ -537,75 +539,162 @@ const BookTour = props => {
           <View style={{marginTop: 20, flex: 1, paddingBottom: 70}}>
             <FlatList
               showsHorizontalScrollIndicator={false}
-              data={DATA2}
+              data={popularData}
               renderItem={({item, index}) => {
                 return (
                   <>
-                    <TouchableOpacity
+                    <View
                       style={{
                         width: (dimensions.SCREEN_WIDTH * 95) / 100,
                         borderRadius: 20,
                         alignSelf: 'center',
                         backgroundColor: '#fff',
                         shadowColor: '#000',
-                        shadowRadius: 2,
-                        shadowOpacity: 0.2,
+                        shadowRadius: 10,
+                        // shadowOffset: {height: 0, width: 3},
+                        shadowOpacity: 1,
                         elevation: 3,
                         marginBottom: 20,
-                      }}
-                      onPress={() => {
-                        props.navigation.navigate('BookDetails', {tourId: 1});
+                        // flex: 1,
                       }}>
-                      <ImageBackground
-                        style={{
-                          width: '100%',
-                          height: 150,
-                          resizeMode: 'stretch',
-                          justifyContent: 'center',
-                          borderTopLeftRadius: 20,
-                          borderTopRightRadius: 20,
-                          overflow: 'hidden',
-                        }}
-                        resizeMode="stretch"
-                        source={require('../../assets/images/largeimages/cardRectangle9.png')}></ImageBackground>
-
-                      <View style={{padding: 15}}>
-                        <View
+                      <TouchableOpacity
+                        onPress={() => {
+                          props.navigation.navigate('BookDetails', {
+                            tourId: item.id,
+                            // CalendarList:calendatData
+                          });
+                          // styles = {flex: 1};
+                        }}>
+                        <ImageBackground
                           style={{
                             width: '100%',
-                          }}>
-                          <View style={{width: '70%'}}>
+                            height: 300,
+                            resizeMode: 'stretch',
+                            justifyContent: 'flex-end',
+                            borderRadius: 20,
+
+                            overflow: 'hidden',
+                          }}
+                          // resizeMode="cover"
+                          source={{uri: `${item?.images}`}}>
+                          <LinearGradient
+                            style={{
+                              borderRadius: 5,
+                              paddingHorizontal: 10,
+                              paddingVertical: 5,
+                              position: 'absolute',
+                              right: 10,
+                              top: 15,
+                              flex: 1,
+                            }}
+                            colors={[
+                              'rgba(76, 186, 8, 0.66)',
+                              'rgba(76, 186, 8, 0.66)',
+                            ]}>
                             <Text
                               style={{
-                                color: '#000',
-                                fontWeight: '700',
-                                fontSize: 16,
-                                lineHeight: 20,
-                              }}>
-                              Circle Island Tour-13 stops
-                            </Text>
-                            <Text
-                              style={{
-                                color: '#000',
+                                backgroundColor: 'transparent',
+                                color: 'rgba(255, 255, 255, 1)',
                                 fontWeight: '700',
                                 fontSize: 14,
-                                lineHeight: 20,
+                                fontFamily: FONTS.bold,
                               }}>
-                              $109 seniors & kids/$149 adults
+                              { 
+                              item?.same_for_all != "" ?  "$"+item?.same_for_all : "$"+item?.age_60_price+" seniors " +"& kids/$"+item?.under_10_age_price+ " adults"
+                            }
                             </Text>
-                            <Text
+                          </LinearGradient>
+                          <LinearGradient
+                            style={{
+                              width: '100%',
+                              justifyContent: 'flex-end',
+                              borderBottomLeftRadius: 20,
+                              borderBottomRightRadius: 20,
+                            }}
+                            colors={[
+                              'rgba(61, 161, 227, 0.8)',
+                              'rgba(61, 161, 227, 0.8)',
+                            ]}>
+                              
+                            <View
                               style={{
-                                color: '#CECECE',
-                                fontWeight: '400',
-                                fontSize: 12,
-                                lineHeight: 20,
+                                padding: 12,
+                                paddingHorizontal: 20,
+                                backgroundColor: 'transparent',
                               }}>
-                              * Price per Person
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  width: '100%',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                }}>
+                                <View style={{width: '70%'}}>
+                                  <Text
+                                    style={{
+                                      backgroundColor: 'transparent',
+                                      color: '#FFFFFF',
+                                      fontWeight: '700',
+                                      fontSize: 16,
+                                    }}>
+                                    {item?.title}
+                                  </Text>
+                                  <Text
+                                    numberOfLines={2}
+                                    style={{
+                                      backgroundColor: 'transparent',
+                                      color: '#FFFFFF',
+                                      fontWeight: '400',
+                                      fontSize: 13,
+                                      lineHeight: 18,
+                                    }}>
+                                   *Price Per Person
+                                  </Text>
+                                </View>
+
+                                {/* <TouchableOpacity
+                                  style={{
+                                    width: 55,
+                                    height: 55,
+                                    borderRadius: 55 / 2,
+                                    backgroundColor: COLORS.Primary_Blue,
+                                    justifyContent: 'center',
+                                    borderWidth: 6,
+                                    borderColor: 'rgba(131, 205, 253, 1)',
+                                  }}
+                                  onPress={() => {
+                                    props.navigation.navigate('BookDetails', {
+                                      tourId: item.id,
+                                    });
+                                  }}>
+                                  <View
+                                    style={{
+                                      width: 45,
+                                      alignSelf: 'center',
+                                      height: 45,
+                                      borderRadius: 45 / 2,
+                                      justifyContent: 'center',
+                                      borderWidth: 1,
+                                      borderColor: 'rgba(228, 228, 228, 1)',
+                                    }}>
+                                    <Text
+                                      style={{
+                                        backgroundColor: 'transparent',
+                                        color: '#fff',
+                                        fontWeight: '600',
+                                        fontSize: 13,
+                                        alignSelf: 'center',
+                                      }}>
+                                      View
+                                    </Text>
+                                  </View>
+                                </TouchableOpacity> */}
+                              </View>
+                            </View>
+                          </LinearGradient>
+                        </ImageBackground>
+                      </TouchableOpacity>
+                    </View>
                   </>
                 );
               }}

@@ -63,7 +63,7 @@ const CustomDrawer = (props) => {
             image={images.home}
             title={'Home'}
             onPress={() => {
-              props.navigation.navigate('HomeStack');
+              props.navigation.navigate('MyTour');
             }}
           />
         </View> */}
@@ -76,6 +76,15 @@ const CustomDrawer = (props) => {
              setWebViewVisible(true);
              props.navigation.closeDrawer();
              // Linking.openURL('http://100.21.178.252/about-us');
+            }}
+          />
+        </View>
+        <View style={[styles.drowerComponentStyle,{marginTop: 15,}]}>
+          <CustomScreen
+            image={images.home}
+            title={'My Tours'}
+            onPress={() => {
+              props.navigation.navigate('MyTour');
             }}
           />
         </View>
