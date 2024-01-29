@@ -130,7 +130,7 @@ const PhotoBoothPurchased = props => {
         else if (imgData.object_type === "video") {
           // console.log("Reached Video, creating thumbnail", imgData);
           const thumb = await createThumbnail({
-            url: imgData.image,
+            url: imgData.media,
             timeStamp: 10000, // Specify the time position for the thumbnail (in milliseconds)
           });
           console.log("Reached Video, creating thumbnail",);
@@ -154,7 +154,7 @@ const PhotoBoothPurchased = props => {
     console.log("my updated image fun", onlyimages);
     var allimgs = [];
     for (let i = 1; i <= onlyimages?.length; i++) {
-      allimgs.push({ img: onlyimages[i - 1]?.image });
+      allimgs.push({ img: onlyimages[i - 1]?.media });
     }
     setAllImg(allimgs);
     setLoading2(false);
@@ -176,7 +176,7 @@ const PhotoBoothPurchased = props => {
           autoPlay={true}
           closeIconColor="#fff"
           onItemChanged={handleItemChanged}
-          activeIndicatorStyle={{ backgroundColor: "#3DA1E3" }}
+          activeIndicatorStyle={{ backgroundColor: "transparent" }}
           inActiveIndicatorStyle={{ top: -5 }}
           caroselImageStyle={{
            
@@ -478,7 +478,7 @@ const PhotoBoothPurchased = props => {
         <VideoModel
           isVisible={showModal.isVisible}
           toggleModal={toggleModal}
-          videoDetail={{ ...showModal?.data, url: showModal?.data?.image }}
+          videoDetail={{ ...showModal?.data, url: showModal?.data?.media }}
           {...props}
         />
       ) : null}

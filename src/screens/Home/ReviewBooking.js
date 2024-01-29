@@ -71,8 +71,8 @@ const ReviewBooking = props => {
   ];
 
   useEffect(() => {
-    console.log('selectREVIEW DATA ...22...',props?.route?.params?.selectedDate[0]);
-    setSelectedDate(props?.route?.params?.selectedDate[0]);
+    console.log('selectREVIEW DATA ...22...',props?.route?.params?.selectedDate);
+    setSelectedDate(props?.route?.params?.selectedDate);
 
     // setTotaladultamount(props?.route?.params?.TourData?.age_11_price)
     // PostRqstFreeCallback(props?.route?.params?.TourData?.id);

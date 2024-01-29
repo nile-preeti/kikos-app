@@ -41,7 +41,7 @@ const BookAnTour = (props) => {
   const [counter, setcounter] = useState(1);
   const [counter1, setcounter1] = useState(1);
   const [counter2, setcounter2] = useState(1);
-const[selectedDate,setSelectedDate]=useState([]);
+const[selectedDate,setSelectedDate]=useState("");
 const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
 
 
@@ -64,10 +64,10 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
       image: require('../../assets/images/largeimages/dummydetail.png'),
     },
   ];
-// console.log("selectDAte",selectedDate[0]);
+// console.log("selectDAte",selectedDate);
   useEffect(() => {
-    console.log('selectDAtes ......',props?.route?.params);
-    setSelectedDate(Object.keys(props?.route?.params?.dates))
+    console.log('selectDAtes ......',props?.route?.params.dates);
+    setSelectedDate(props?.route?.params?.dates)
     // PostTourDetails(props?.route?.params?.tourId);
   }, []);
 
@@ -88,7 +88,7 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
   //     let formdata = new FormData();
   //     formdata.append('tour_id', id);
   //     formdata.append('tour_type', "1"); /*1-Normal Tour, 2:Virtual tour */
-  //     formdata.append('booking_date', selectedDate[0]);
+  //     formdata.append('booking_date', selectedDate);
   //     formdata.append('no_adults', timezonevalue);
   //     formdata.append('no_senior_citizen', timezonevalue);
   //     formdata.append('no_childerns', timezonevalue);
@@ -251,7 +251,7 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
                   source={require('../../assets/images/Icons/clock.png')}></Image>
                 <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                   {' '}
-                  {moment(selectedDate[0]).format('LL')}
+                  {moment(selectedDate).format('LL')}
                 </Text>
               </View>
             </View>

@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setLoading, saveUserResult} from '../../redux/actions/user_action';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
-import {home, requestGetApi, requestPostApi} from '../../WebApi/Service';
+import {calendarEvents, home, requestGetApi, requestPostApi} from '../../WebApi/Service';
 import COLORS from '../../global/Colors';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -105,6 +105,7 @@ const HomeScreen = props => {
   const [phone, setphone] = useState('');
   const [email, setemail] = useState('');
   const [My_Alert, setMy_Alert] = useState(false);
+const[calendatData,setCalendatData]=useState([]);
 
   const [alert_sms, setalert_sms] = useState('');
   const [loading, setLoading] = useState(false);
@@ -112,6 +113,7 @@ const HomeScreen = props => {
   const navigation = useNavigation();
   useEffect(() => {
     getprofile();
+    // GetCalenderEvents();
     props.navigation.closeDrawer();
   }, []);
 
@@ -133,6 +135,32 @@ const HomeScreen = props => {
     }
   };
 
+  // const GetCalenderEvents = async()=> {
+  //   setLoading(true);
+    
+  //   const {responseJson, err} = await requestGetApi(
+  //     calendarEvents,
+  //     '',
+  //     'GET',
+  //     '',
+  //   );
+  //   setLoading(false);
+  //   console.log('the res=PostTourDetails=>>', responseJson);
+  //   if (err == null) {
+  //     if (responseJson.status == true) {
+  //       setCalendatData(responseJson);
+         
+   
+  //     } else {
+  //       setalert_sms(responseJson.message);
+  //       setMy_Alert(true);
+  //     }
+  //   } else {
+  //     setalert_sms(err);
+  //     setMy_Alert(true);
+  //   }
+    
+  // };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#E8ECF2'}}>
       {/* <View style={{ backgroundColor: '#E8ECF2',flex:1}}> */}
@@ -247,6 +275,7 @@ const HomeScreen = props => {
                         onPress={() => {
                           props.navigation.navigate('BookDetails', {
                             tourId: item.id,
+                            // CalendarList:calendatData
                           });
                           // styles = {flex: 1};
                         }}>

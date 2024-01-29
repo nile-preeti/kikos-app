@@ -30,24 +30,33 @@ import {Calendar, LocaleConfig, CalendarUtils} from 'react-native-calendars';
 import {ImageSlider, ImageCarousel} from 'react-native-image-slider-banner';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
-import {calendarEvents, requestGetApi, requestPostApi, tour_details} from '../../WebApi/Service';
+import {
+  calendarEvents,
+  requestGetApi,
+  requestPostApi,
+  tour_details,
+} from '../../WebApi/Service';
 import {useSelector, useDispatch} from 'react-redux';
 import {onLogoutUser} from '../../redux/actions/user_action';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 
 const BookDetails = props => {
   const user = useSelector(state => state.user.user_details);
   const dispatch = useDispatch();
-  const[eventsDateNotAvailable,setEventsDateNotAvailable]=useState([]);
-  const[eventsBookDate,setEventsBookDate]=useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [popup, setpopup] = useState(false);
   const [tourdetails, setTourDetail] = useState('');
   const [allImg, setAllImg] = useState([{img: ''}]);
-  const[selectedDate,setSelectedDate]=useState([]);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [unavailableDays, setUnavailableDays] = useState({});
+  const [availableDays, setavailableDays] = useState({});
+  
+  const [markedDates, setMarkedDates] = useState({
+    ...unavailableDays,
+    ...availableDays,
+  });
 
-  const [markedDates, setMarkedDates] = useState({});
   const [My_Alert, setMy_Alert] = useState(false);
   const [alert_sms, setalert_sms] = useState('');
   const [loading, setLoading] = useState(false);
@@ -68,10 +77,11 @@ const BookDetails = props => {
 
   useEffect(() => {
     // console.log('TourID ......', props?.route?.params?.tourId);
-  const unsubscribe = props.navigation.addListener('focus', () => {
-      PostTourDetails(props?.route?.params?.tourId);
+    const unsubscribe = props.navigation.addListener('focus', () => {
       GetCalenderEvents();
-      setMarkedDates('');
+      PostTourDetails(props?.route?.params?.tourId);
+      setMarkedDates({});
+      setSelectedDate('');
     });
     return unsubscribe;
   }, []);
@@ -114,9 +124,9 @@ const BookDetails = props => {
     // }
   };
 
-  const GetCalenderEvents = async()=> {
+  const GetCalenderEvents = async () => {
     setLoading(true);
-    
+
     const {responseJson, err} = await requestGetApi(
       calendarEvents,
       '',
@@ -128,36 +138,26 @@ const BookDetails = props => {
     if (err == null) {
       if (responseJson.status == true) {
         // setEventsDateNotAvailable(responseJson.booked_events);
-        var BookDateArr = [];
+        // var BookDateArr = [];
 
-          for (let i = 1; i <= responseJson.booked_events.length; i++) {
-            BookDateArr.push(responseJson.booked_events[i - 1].date);
-          }
-          console.log('the BookedDates==>>', BookDateArr);
-          setEventsBookDate(BookDateArr);
-
-        var DateArr = [];
-
-        for (let i = 1; i <= responseJson.not_available.length; i++) {
-          DateArr.push(responseJson.not_available[i - 1].date);
-        }
-        console.log('the allimgs==>>', DateArr);
-        setEventsDateNotAvailable(DateArr);
-        setMarkedDates({...markedDates,[Object.keys(DateArr)]: {selected: true, disableTouchEvent: true,
-          selectedColor: '#9C9D9F',
-          marked: false,
-          dotColor: '#9C9D9F', },
-          [Object.keys(BookDateArr)]: {selected: true, disableTouchEvent: true,
-            selectedColor: '#4CBA08',
-            marked: false,
-            dotColor: '#4CBA08', },
+        //   for (let i = 1; i <= responseJson.booked_events.length; i++) {
+        //     BookDateArr.push({date:responseJson.booked_events[i - 1].date});
+        //   }
+        const notAvailableDatesObj = {};
+        responseJson.booked_events.forEach((date) => {
+          notAvailableDatesObj[date.date] = { disabled: true, disableTouchEvent: true, selectedColor: '#4CBA08',dotColor: '#4CBA08',marked: false,selected: true, };
         });
-      
-          // setMarkedDates({[BookDateArr]: {selected: true, disableTouchEvent: true,
-          //   selectedColor: '#4CBA08',
-          //   marked: false,
-          //   dotColor: '#4CBA08', },
-          // });
+          console.log('the notAvailableDatesObj==>>', notAvailableDatesObj);
+          setUnavailableDays(notAvailableDatesObj);
+
+          const bookedDatesObj = {};
+          responseJson.not_available.forEach((date) => {
+            console.log('the date==>>', date.date);
+          bookedDatesObj[date.date] = {disabled: true, disableTouchEvent: true, selectedColor: '#9C9D9F',dotColor: '#9C9D9F',marked: false,selected: true,  };
+        });
+        console.log('the bookedDatesObj==>>', bookedDatesObj);
+        setavailableDays(bookedDatesObj);
+          
       } else {
         setalert_sms(responseJson.message);
         setMy_Alert(true);
@@ -166,52 +166,62 @@ const BookDetails = props => {
       setalert_sms(err);
       setMy_Alert(true);
     }
-    
   };
 
+  
+  // const handleDayPress = day => {
+  //   console.log("Calender Select date:::",day);
+  //   // Check if the date is already marked
+  //   if (markedDates[day.dateString]) {
+  //     // Date is already marked, unmark it
+  //     const updatedMarkedDates = {...markedDates};
+  //     delete updatedMarkedDates[day.dateString];
+  //    setMarkedDates(updatedMarkedDates);
+
+  //          console.log("day.dateString.day////////",updatedMarkedDates);
+  //   } else {
+  //     console.log("day.dateString.day.dateString",day.dateString);
+  //     setSelectedDate(day.dateString);
+  //     // Date is not marked, mark it
+  //     setMarkedDates({
+  //       // ...markedDates,
+  //       [day.dateString]: {
+  //         selected: true,
+  //         selectedColor: '#3DA1E3',
+  //         marked: true,
+  //         dotColor: '#3DA1E3',
+  //       },
+  //       // [eventsDateNotAvailable]: {selected: true, disableTouchEvent: true,
+  //       //   selectedColor: '#9C9D9F',
+  //       //   marked: false,
+  //       //   dotColor: '#9C9D9F', },
+  //       //   [eventsBookDate]: {selected: true, disableTouchEvent: true,
+  //       //     selectedColor: '#4CBA08',
+  //       //     marked: false,
+  //       //     dotColor: '#4CBA08', },
+  //     });
+  //     // setMarkedDates({
+  //     //   ...markedDates,
+  //     //   [day.dateString]: {
+  //     //     selected: true,
+  //     //     selectedColor: '#3DA1E3',
+  //     //     marked: true,
+  //     //     dotColor: '#3DA1E3',
+  //     //   },
+  //     // });
+  //   }
+  // };
   const handleDayPress = day => {
-    console.log("Calender Select date:::",day);
-    // Check if the date is already marked
-    if (markedDates[day.dateString]) {
-      // Date is already marked, unmark it
-      const updatedMarkedDates = {...markedDates};
-      delete updatedMarkedDates[day.dateString];
-     setMarkedDates(updatedMarkedDates);
-    
-           console.log("day.dateString.day////////",updatedMarkedDates);
-    } else {
-      console.log("day.dateString.day.dateString",day.dateString);
+    // Check if the selected date is booked
+    if (!availableDays[day.dateString]) {
       setSelectedDate(day.dateString);
-      // Date is not marked, mark it
-      setMarkedDates({
-        // ...markedDates,
-        [day.dateString]: {
-          selected: true,
-          selectedColor: '#3DA1E3',
-          marked: true,
-          dotColor: '#3DA1E3',
-        },
-        [eventsDateNotAvailable]: {selected: true, disableTouchEvent: true,
-          selectedColor: '#9C9D9F',
-          marked: false,
-          dotColor: '#9C9D9F', },
-          [eventsBookDate]: {selected: true, disableTouchEvent: true,
-            selectedColor: '#4CBA08',
-            marked: false,
-            dotColor: '#4CBA08', },
-      });
-      // setMarkedDates({
-      //   ...markedDates,
-      //   [day.dateString]: {
-      //     selected: true,
-      //     selectedColor: '#3DA1E3',
-      //     marked: true,
-      //     dotColor: '#3DA1E3',
-      //   },
-      // });
+      } else {
+       const updatedMarkedDates = {...markedDates};
+           delete updatedMarkedDates[day.dateString];
+          setMarkedDates(updatedMarkedDates);
     }
   };
-  
+
   return (
     <SafeAreaView style={{backgroundColor: COLORS.Primary_Blue, flex: 1}}>
       <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
@@ -225,30 +235,6 @@ const BookDetails = props => {
               props.navigation.navigate('Notification');
             }}
           />
-
-          {/* <View style={{marginTop:15}}>
-        <FlatList
-          data={data}
-          horizontal={true}
-          pagingEnabled
-          // onViewableItemsChanged={onViewableItemsChanged}
-          showsHorizontalScrollIndicator={false}
-          // viewabilityConfig={{
-          //   itemVisiblePercentThreshold: 50,
-          // }}
-          renderItem={({item, index}) => {
-            return (
-              <View style={{width:dimensions.SCREEN_WIDTH*90/100,height:dimensions.SCREEN_HEIGHT*30/100,borderRadius:15}}>
-                <Image
-                  style={{width:'100%',height:'100%',overflow:'hidden',borderRadius:15}}
-                  resizeMode="stretch"
-                  source={item.img}
-                />
-              </View>
-            );
-          }}
-        />
-      </View> */}
           <View
             style={{
               height: (dimensions.SCREEN_HEIGHT * 35) / 100,
@@ -422,32 +408,7 @@ const BookDetails = props => {
               </Text>
             </View>
           </View>
-          {/* <View style={styles.txtTotal}>
-        <TouchableOpacity style={styles.whiteCircle}>
-          <Image
-            tintColor={'black'}
-            style={{transform: [{rotate: '180deg'}]}}
-            source={images.arrowsRight}
-          />
-        </TouchableOpacity>
-        <View>
-          <Text
-            style={styles.countTxt}>{`${currentIndex}/${data.length}`}</Text>
-        </View>
-        <TouchableOpacity style={styles.whiteCircle}>
-          <Image tintColor={'black'} source={images.arrowsRight} />
-        </TouchableOpacity>
-      </View> */}
-          {/* <CustomButton
-            txtStyle={{color: '#000', fontSize: 14, fontWeight: '400'}}
-            backgroundColor={'#FFF'}
-            title={'Request A Free Callback'}
-            onPress={() => {
-              props.navigation.navigate('RequestAFreeCallback', {
-                tourId: props?.route?.params?.tourId,
-              });
-            }}
-          /> */}
+         
           <TouchableOpacity
             style={{
               height: 60,
@@ -490,7 +451,6 @@ const BookDetails = props => {
               if (user.userid == undefined) {
                 setpopup(true);
               } else {
-              
                 setModalVisible(true);
               }
             }}
@@ -538,7 +498,7 @@ const BookDetails = props => {
                   fontWeight: '600',
                   textAlign: 'center',
                 }}>
-                TO Book An Appointment For {tourdetails?.title}.
+                To Book An Appointment For {tourdetails?.title}.
               </Text>
               <Text
                 style={{
@@ -555,7 +515,6 @@ const BookDetails = props => {
                 title={'Login / Signup'}
                 borderColor={'#83CDFD'}
                 onPress={() => {
-                  // props.navigation.goBack();
                   AsyncStorage.clear();
                   dispatch(onLogoutUser());
                   setpopup(false);
@@ -659,44 +618,29 @@ const BookDetails = props => {
                   </Text>
                 </TouchableOpacity>
               </View> */}
-              {
-                console.log("eventsBookDate",eventsBookDate)
-              }
+              {console.log(
+              
+                ';;;;;eventsBookDate.....',
+                selectedDate
+              )}
               <View style={{width: '100%', marginTop: 10}}>
                 <Calendar
-                  // onDayPress={day => {
-                  //   console.log('selected day', day.dateString);
-                  //   setMarkedDates(day.dateString)
-                  // }}
-                  // markedDates={{
-                  //   [markedDates]: {selected: true,  selectedColor: '#3DA1E3',marked: true,dotColor: '#3DA1E3',},
-                  //   [markedDates]: {selected: true, disableTouchEvent: true,
-                  //     selectedColor: '#4CBA08',
-                  //     marked: true,
-                  //     dotColor: '#4CBA08', },
-                      
-                  // }}
-                  // markedDates={{
-                  //   '2024-01-14': {selected: true, selectedColor: 'blue',disableTouchEvent: true,},
-                  //   '2024-01-15': {selected: true,selectedColor: 'blue',disableTouchEvent: true,},
-                  //   '2024-01-16': {selected: true,  selectedColor: 'blue',disableTouchEvent: true,}
-                  // }}
-                  minDate={new Date()}
-                  current={new Date()}
+                  minDate={moment().format('YYYY-MM-DD')}
+                  // current={new Date()}
+                  markedDates={{
+                    ...availableDays,
+                    ...unavailableDays,
+                    [selectedDate]: {
+                      selected: true,
+                      selectedColor: '#3DA1E3',
+                      marked: true,
+                      dotColor: '#3DA1E3',
+                    },
+                  }}
                   onDayPress={handleDayPress}
-                  markedDates={markedDates}
                   horizontal={true}
-                  // Enable paging on horizontal, default = false
                   pagingEnabled={true}
                   disabledOpacity={0.6}
-                  // Do not show days of other months in month page. Default = false
-                  // hideExtraDays={true}
-                  // disableMonthChange={true}
-                  // Hide day names. Default = false
-                  // hideDayNames={true}
-                  // Show week numbers to the left. Default = false
-                  // showWeekNumbers={true}
-
                   theme={{
                     backgroundColor: '#ffffff',
                     calendarBackground: '#ffffff',
@@ -729,29 +673,24 @@ const BookDetails = props => {
                   }}
                 />
                 <View style={{width: 10}}></View>
-                 
+
                 <CustomButton
                   txtStyle={{color: '#fff', fontSize: 16, fontWeight: '400'}}
                   borderColor={'#83CDFD'}
                   backgroundColor={COLORS.Primary_Blue}
                   title={'Next'}
                   onPress={() => {
-                    console.log('typ edDates',Object.keys(markedDates)[0],  selectedDate);
-                    if (Object.keys(markedDates).length > 0) {
-                     
-                      if(Object.keys(markedDates)[0] ==  selectedDate){
-                        props.navigation.navigate('BookAnTour', {
-                          dates: markedDates,
+                    console.log(
+                      'typ edDates',
+                      selectedDate,
+                    );
+                    if (selectedDate != '') {
+                       props.navigation.navigate('BookAnTour', {
+                          dates: selectedDate,
                           TourData: tourdetails,
                         });
-                        setModalVisible(false)
-                      }
-                      else{
                         setModalVisible(false);
-                        setalert_sms('Please select booking date');
-                        setMy_Alert(true);
-                      }
-                     
+                      
                     } else {
                       setModalVisible(false);
                       setalert_sms('Please select booking date');

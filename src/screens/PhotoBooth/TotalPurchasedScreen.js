@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     ImageBackground,
   } from 'react-native';
-  import React, {useState} from 'react';
+  import React, {useState,useEffect} from 'react';
   import CustomHeader from '../../components/CustomeHeader';
   import CustomheaderCard1 from '../../components/CustomheaderCard1';
   import images from '../../global/images';
@@ -26,7 +26,7 @@ import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
-import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../WebApi/Service';
+import {Photo_BoothPurchase_Listing, home, photo_booth_listing, requestGetApi, requestPostApi} from '../../WebApi/Service';
   
   const TotalPurchasedScreen = props => {
     const user = useSelector(state => state.user.user_details);
@@ -34,15 +34,30 @@ import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../We
     const [My_Alert, setMy_Alert] = useState(false);
     const [alert_sms, setalert_sms] = useState('');
     const [loading, setLoading] = useState(false);
-    const [DATA2, setDATA2] = useState([
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat',
-      'Sun',
-    ]);
+    const [DATA2, setDATA] = useState([]);
+    const[counts,SetCounts]=useState('');
+    useEffect(() => {
+      GetPhotoBooth();
+    }, []);
+
+    const GetPhotoBooth = async () => {
+      setLoading(true);
+      const {responseJson, err} = await requestGetApi(Photo_BoothPurchase_Listing, '', 'GET', user.token);
+      setLoading(false);
+      console.log('the GetPhotoBooth==>>', responseJson);
+      if (err == null) {
+        if (responseJson.status == true) {
+          setDATA(responseJson.data);
+          SetCounts(responseJson);
+        } else {
+          setalert_sms(responseJson.message);
+          setMy_Alert(true);
+        }
+      } else if(err == null) {
+        setalert_sms(err);
+        setMy_Alert(true);
+      }
+    };
     return (
       <SafeAreaView style={{backgroundColor: COLORS.White, flex: 1}}>
        <CustomHeader
@@ -61,9 +76,9 @@ import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../We
                 middleView={
                   <View style={styles.hrcontainer}>
                     <Image style={{height: 15, width: 15, tintColor: '#CECECE'}} source={images.gallaryicon} />
-                    <Text style={styles.titleTxt}>432 Photos</Text>
+                    <Text style={styles.titleTxt}>{counts?.total_purchase_image} Photos</Text>
                     <Image style={{height:15,width:15,marginLeft:5,tintColor: '#CECECE'}} source={images.gallaryvideoicon} />
-                    <Text style={styles.titleTxt}>432 Photos</Text>
+                    <Text style={styles.titleTxt}>{counts?.total_purchase_video} Photos</Text>
                   </View>
                 }
               />
@@ -90,8 +105,8 @@ import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../We
                       }}>
                       <ImageBackground
                         style={styles.imageBackground}
-                        source={{uri :"http://100.21.178.252/public/upload/photo-booth/IMG_20240118_073235_6515.jpg"}}
-                        // source={{uri: `${item?.image}`}}
+                        // source={{uri :"http://100.21.178.252/public/upload/photo-booth/IMG_20240118_073235_6515.jpg"}}
+                        source={{uri: `${item?.image}`}}
                         >
                         <LinearGradient
                           style={{
@@ -117,7 +132,7 @@ import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../We
                                 styles.titleTxt,
                                 {marginLeft: 10, color: '#fff'},
                               ]}>
-                              {item?.image_count}1 Photos
+                              {item?.image_count} Photos
                             </Text>
                             <Image
                               style={{marginLeft: 10, height: 15, width: 15}}
@@ -128,7 +143,7 @@ import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../We
                                 styles.titleTxt,
                                 {marginLeft: 10, color: '#fff'},
                               ]}>
-                              {item?.video_count}3 Videos
+                              {item?.video_count} Videos
                             </Text>
                           </View>
                         </LinearGradient>
@@ -164,8 +179,8 @@ import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../We
                                     fontWeight: '700',
                                     fontSize: 16,
                                     lineHeight:20
-                                  }}>3 Ultimate Activities, World Famous Food Trucks, Fun Tour
-                                  {/* {item?.tour_name} */}
+                                  }}> 
+                                  {item?.title}
                                 </Text>
                                 <Text
                                   numberOfLines={2}
@@ -175,7 +190,7 @@ import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../We
                                     fontWeight: '400',
                                     fontSize: 12,
                                     lineHeight: 20,
-                                  }}>09:15
+                                  }}> 09:10 am
                                   {/* {item?.title} */}
                                 </Text>
                               </View>
@@ -204,7 +219,7 @@ import {home, photo_booth_listing, requestGetApi, requestPostApi} from '../../We
                                     fontSize: 14,
                                     alignSelf: 'center',
                                   }}>
-                                  Purchase at ${item?.price}55
+                                  Purchase at ${item?.price}
                                 </Text>
                               </LinearGradient>
                             </View>

@@ -35,7 +35,14 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
-import {callback_request, requestPostApi, tour_details} from '../../WebApi/Service';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {
+  callback_request,
+  requestGetApi,
+  requestPostApi,
+  timezone_list,
+  tour_details,
+} from '../../WebApi/Service';
 import {useSelector, useDispatch} from 'react-redux';
 import MaskInput from 'react-native-mask-input';
 
@@ -47,12 +54,16 @@ const RequestAFreeCallback = props => {
   const [alert_sms, setalert_sms] = useState('');
   const [loading, setLoading] = useState(false);
   const [popup, setpopup] = useState(false);
-  const [timezonevalue, setTimeZoneValue] = useState('UTC-05:00 Los Angeles');
+  // const [timezonevalue, setTimeZoneValue] = useState('UTC-05:00 Los Angeles');
   const [value, setValue] = useState('');
   const [formattedValue, setFormattedValue] = useState('');
   const [date, setDate] = useState('');
   const [orderTime, setOrderTime] = useState('');
   const [addNote, setAddNote] = useState('');
+  const [timeListData, setTimeListData] = useState([]);
+  const [openTimeZone, setopenTimeZone] = useState(false);
+
+  const [valueTimeZone, setValueTimeZone] = useState('');
 
   const [showda, setshowda] = useState(false);
   const [showdatime, setshowdatime] = useState(false);
@@ -63,10 +74,11 @@ const RequestAFreeCallback = props => {
   const [markedDates, setMarkedDates] = useState({});
 
   useEffect(() => {
-    console.log(
-      'TourID ..from bookDetails screen....',
-      props?.route?.params?.tourId,
-    );
+    getTimeZoneList();
+    // console.log(
+    //   'TourID ..from bookDetails screen....',
+    //   props?.route?.params?.tourId,
+    // );
   }, []);
 
   const PostRqstFreeCallback = async id => {
@@ -76,7 +88,7 @@ const RequestAFreeCallback = props => {
     } else if (mobile == '' || mobile.trim().length == 0) {
       setalert_sms('Please Enter Mobile Number');
       setMy_Alert(true);
-    } else if (timezonevalue == '' || timezonevalue.trim().length == 0) {
+    } else if (valueTimeZone == '' || valueTimeZone.trim().length == 0) {
       setalert_sms('Please select Time Zone');
       setMy_Alert(true);
     } else if (date == '' || date.trim().length == 0) {
@@ -94,7 +106,7 @@ const RequestAFreeCallback = props => {
       formdata.append('tour_id', id);
       formdata.append('name', fullName);
       formdata.append('mobile', mobile);
-      formdata.append('timezone', timezonevalue);
+      formdata.append('timezone', valueTimeZone);
       formdata.append(
         'preferred_time',
         moment(date).format('YYYY-MM-DD') + ' ' + orderTime,
@@ -104,7 +116,7 @@ const RequestAFreeCallback = props => {
         callback_request,
         formdata,
         'POST',
-        "",
+        '',
       );
       setLoading(false);
       console.log('the res=PostTourDetails=>>', responseJson);
@@ -121,6 +133,36 @@ const RequestAFreeCallback = props => {
       }
     }
   };
+  const getTimeZoneList = async () => {
+    setLoading(true);
+    const {responseJson, err} = await requestGetApi(
+      timezone_list,
+      '',
+      'GET',
+      '',
+    );
+    setLoading(false);
+    // console.log('the getTimeZoneList==>>', responseJson);
+    if (err == null) {
+      if (responseJson.status == true) {
+        // setTimeListData(responseJson.data);
+        var Arr = [];
+
+        for (let i = 1; i <= responseJson.data.length; i++) {
+          Arr.push({label: responseJson.data[i - 1].name,value: responseJson.data[i - 1].name});
+        }
+        console.log('the time values==>>', Arr);
+        setTimeListData(Arr);
+      } else {
+        setalert_sms(responseJson.message);
+        setMy_Alert(true);
+      }
+    } else if (err == null) {
+      setalert_sms(err);
+      setMy_Alert(true);
+    }
+  };
+
   const formatPhoneNumber = input => {
     // Remove all non-numeric characters
     const cleanedInput = input.replace(/\D/g, '');
@@ -142,7 +184,7 @@ const RequestAFreeCallback = props => {
             onBackPress={() => {
               props.navigation.goBack();
             }}
-            onNotificationPress={()=>{
+            onNotificationPress={() => {
               props.navigation.navigate('Notification');
             }}
           />
@@ -156,13 +198,19 @@ const RequestAFreeCallback = props => {
             />
           </View>
           {/* {console.log('MOBILENO>', mobile)} */}
-          <View style={{marginTop: 10, alignSelf: 'center', width: '90%',backgroundColor:"white"}}>
+          <View
+            style={{
+              marginTop: 10,
+              alignSelf: 'center',
+              width: '90%',
+              backgroundColor: 'white',
+            }}>
             <MaskInput
               value={mobile}
-              keyboardType='phone-pad' 
-              placeholder='Phone Number'
-              placeholderTextColor={"#CECECE"}
-              style={{color:"#000",marginLeft:15}}
+              keyboardType="phone-pad"
+              placeholder="Phone Number"
+              placeholderTextColor={'#CECECE'}
+              style={{color: '#000', marginLeft: 15}}
               onChangeText={(masked, unmasked) => {
                 setMobile(masked); // you can use the unmasked value as well
 
@@ -234,15 +282,116 @@ const RequestAFreeCallback = props => {
             /> */}
           </View>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => setModalVisible(true)}
             style={styles.dropdownButton}>
             <Text style={{fontSize: 14, fontWeight: '400', color: '#4F5168'}}>
-              UTC-05:00 Los Angeles
-              {/* Select Time Zone */}
+               Select Time Zone
             </Text>
             <Image source={images.down} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          {/* {
+            console.log("timeListData",valueTimeZone)
+          } */}
+          <View
+            style={{
+              // width: '48%',
+              
+              zIndex: 999,
+              marginTop: 15,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              // paddingHorizontal: 10,
+              height: 50,
+              borderRadius: 7,
+              width: '90%',
+              marginHorizontal: 20,
+              backgroundColor: '#fff',
+            }}>
+            <DropDownPicker
+            
+            items={timeListData}
+              // items={[
+              //   {label: 'Most Popular', value: 'Most Popular'},
+              //   {label: 'New!', value: 'new'},
+              //   {label: "Circle island o'ahu", value: "Circle island o'ahu"},
+              // ]}
+              listParentContainerStyle={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                // paddingLeft: 12,
+              }}
+              listParentLabelStyle={{
+                fontWeight: '400',
+                fontSize: 14,
+              }}
+              theme="LIGHT"
+              // backgroundColor="white"
+              placeholder="Select Time Zone"
+              placeholderTextColor={'#B2B7B9'}
+              containerStyle={{height: 50, paddingLeft: 2}}
+              dropDownDirection="BOTTOM"
+              listMode="MODAL"
+              modalAnimationType="fade"
+              bottomOffset={100}
+              itemStyle={{justifyContent: 'flex-start'}}
+              textStyle={{
+                fontSize: 14,
+              }}
+              open={openTimeZone}
+              setOpen={setopenTimeZone}
+              value={valueTimeZone}
+              setValue={setValueTimeZone}
+              scrollViewProps={{
+                decelerationRate: 'medium',
+                ScrollView: '#ffcc00',
+              }}
+              onChangeValue={values => {
+                // console.log("DropDownPicker",values);
+                setValueTimeZone(values);
+              }}
+              onChangeText={item => setValueTimeZone(item)}
+              defaultValue={null}
+              searchable={true}
+              searchTextInputProps={{
+                maxLength: 25
+              }}
+              searchPlaceholder="Search..."
+              // searchWithRegionalAccents={true}
+              dropDownContainerStyle={{
+                width:'100%',
+                justifyContent:'center',
+                // backgroundColor: 'white',
+                borderColor: 'transparent',
+                // borderBottomLeftRadius:15,
+                // borderWidth: 0.1,
+                shadowColor: '#000000',
+                shadowOffset: {
+                  width: 0,
+                  height: 3,
+                },
+                shadowRadius: 5,
+                shadowOpacity: 1.0,
+                elevation: 5,
+                zIndex: 999,
+                // borderBottomColor:'#000000',
+                // borderBottomWidth:0.5,
+                // borderColor: "#8F93A0",
+                borderRadius: 15,
+                marginTop: 6,
+              }}
+              style={{
+                borderColor: 'white',
+                backgroundColor: 'white',
+                borderRadius: 5,
+
+                zIndex: 1,
+                paddingLeft: 15,
+              }}
+            />
+          </View>
+
           <View
             style={{
               flexDirection: 'row',
@@ -324,7 +473,10 @@ const RequestAFreeCallback = props => {
                       minimumDate={new Date()}
                       onChange={(event, sTime) => {
                         setshowda(false);
-                        console.log('SelectDate.....', moment(sTime).format('YYYY-MM-DD'));
+                        console.log(
+                          'SelectDate.....',
+                          moment(sTime).format('YYYY-MM-DD'),
+                        );
                         setDate(moment(sTime).format('YYYY-MM-DD'));
                         console.log(event);
                       }}
@@ -441,14 +593,12 @@ const RequestAFreeCallback = props => {
                         setshowdatime(false);
                         // console.log("SelectTime.....", stime.toDateString());
                         setOrderTime(
-                          moment(event.nativeEvent.timestamp).format(
-                            'HH:mm',
-                          ),
+                          moment(event.nativeEvent.timestamp).format('HH:mm'),
                         );
-                          console.log(
-                            "START TIME",
-                            moment(event.nativeEvent.timestamp).format("HH:mm")
-                          );
+                        console.log(
+                          'START TIME',
+                          moment(event.nativeEvent.timestamp).format('HH:mm'),
+                        );
                       }}
                     />
                   </View>
@@ -571,7 +721,7 @@ const RequestAFreeCallback = props => {
             </Text>
 
             <CustomButton
-             borderColor={'#83CDFD'}
+              borderColor={'#83CDFD'}
               title={'Close'}
               onPress={() => {
                 props.navigation.goBack();
@@ -667,7 +817,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     marginLeft: 5,
     color: '#1F191C',
-    width:'100%',
+    width: '100%',
     // backgroundColor:'red'
   },
   thirdRow: {

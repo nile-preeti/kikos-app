@@ -91,7 +91,10 @@ const BookTaxi = props => {
       setalert_sms('Please Enter Full Name');
       setMy_Alert(true);
     }   else if (mobile == '' || mobile.trim().length == 0) {
-      setalert_sms('Please Enter Mobile Number');
+      setalert_sms('Please Enter Phone Number');
+      setMy_Alert(true);
+    }else if (mobile.trim().length < 10) {
+      setalert_sms('Please Enter Valid Phone Number');
       setMy_Alert(true);
     } else if (hotelName == '' || hotelName.trim().length == 0) {
       setalert_sms('Please Enter Hotel Name');
@@ -230,7 +233,7 @@ const BookTaxi = props => {
             style={{
               marginTop: 17,
               width: '90%',
-              height: 50,
+              height: 55,
               marginHorizontal: 20,
               backgroundColor: '#FFFFFF',
               borderRadius: 5,
@@ -313,7 +316,7 @@ const BookTaxi = props => {
                 <TouchableOpacity
                   style={{
                     width: '100%',
-                    height: 50,
+                    height: 55,
                     justifyContent: 'center',
 
                     borderColor: 'transparent',
@@ -356,10 +359,51 @@ const BookTaxi = props => {
           {/* {console.log('MOBILENO>', mobile)} */}
           <View
             style={{
+              flexDirection: 'row',
               marginTop: 10,
               alignSelf: 'center',
               width: '90%',
               backgroundColor: 'white',
+              shadowColor: '#000',
+              shadowOffset: {width: 1, height: 1},
+              shadowOpacity: 0.4,
+              shadowRadius: 2,
+              elevation: 3,
+            }}>
+          <View
+              style={{
+                height: 55,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 15,
+                // marginTop: 4,
+              }}>
+              <Text
+                style={{
+                  marginLeft: 5,
+                  color: '#1F191C',
+                  fontSize: 14,
+                  fontWeight: '400',
+                }}>
+                +1
+              </Text>
+            </View>
+          <View
+            style={{
+              // marginTop: 10,
+            
+              // justifyContent:'center',
+              // width: '90%',
+              // backgroundColor: 'white',
+              height:55,
+
+              borderLeftColor: '#EAEDF7',
+              borderLeftWidth: 1,
+              // height: 42,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginLeft: 15,
+              // marginTop: 4,
             }}>
             <MaskInput
               value={mobile}
@@ -437,7 +481,7 @@ const BookTaxi = props => {
                 // autoFocus
               /> */}
           </View>
-
+          </View>
           <View style={{marginTop: 13}}>
             <CustomTextInput
               onChangeText={txt => {
