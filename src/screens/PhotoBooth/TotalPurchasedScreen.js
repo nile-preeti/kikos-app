@@ -95,6 +95,7 @@ import {Photo_BoothPurchase_Listing, home, photo_booth_listing, requestGetApi, r
               <FlatList
                 showsHorizontalScrollIndicator={false}
                 data={DATA2}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
                   return (
                     <>

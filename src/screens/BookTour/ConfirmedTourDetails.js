@@ -150,6 +150,7 @@ const ConfirmedTourDetails = props => {
             data={data}
             horizontal={true}
             pagingEnabled
+            keyExtractor={(item, index) => index.toString()}
             // onViewableItemsChanged={onViewableItemsChanged}
             showsHorizontalScrollIndicator={false}
             // viewabilityConfig={{

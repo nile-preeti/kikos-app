@@ -230,29 +230,31 @@ const HomeStack=()=> {
             }
           }
         }} />
-  <Stack.Screen name="MyTour" component={MyTour}  options={{
-          headerShown: false,
-          transitionSpec: {
-            open: config,
-            close: closeConfig
-          },
-          gestureEnabled: true,
-          gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
-            return {
-              cardStyle: {
-                transform: [
-                  {
-                    translateY: current.progress.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [layouts.screen.height, 0],
-                    }),
-                  },
-                ],
-              },
-            }
-          }
-        }} />
+  <Stack.Screen name="MyTour" component={MyTour}  
+  // options={{
+  //         headerShown: false,
+  //         transitionSpec: {
+  //           open: config,
+  //           close: closeConfig
+  //         },
+  //         gestureEnabled: true,
+  //         gestureDirection: 'vertical',
+  //         cardStyleInterpolator: ({ current, layouts }) => {
+  //           return {
+  //             cardStyle: {
+  //               transform: [
+  //                 {
+  //                   translateY: current.progress.interpolate({
+  //                     inputRange: [0, 1],
+  //                     outputRange: [layouts.screen.height, 0],
+  //                   }),
+  //                 },
+  //               ],
+  //             },
+  //           }
+  //         }
+  //       }}
+         />
          <Stack.Screen name='ConfirmedTourDetails' component={ConfirmedTourDetails}  options={{
           headerShown: false,
           transitionSpec: {

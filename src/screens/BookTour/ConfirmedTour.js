@@ -20,7 +20,11 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Calendar, LocaleConfig, CalendarUtils} from 'react-native-calendars';
 import {DASHDATA} from '../../redux/types';
-import {confirmed_tour, requestGetApi, requestPostApi} from '../../WebApi/Service';
+import {
+  confirmed_tour,
+  requestGetApi,
+  requestPostApi,
+} from '../../WebApi/Service';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
 import {useSelector, useDispatch} from 'react-redux';
@@ -57,14 +61,14 @@ const ConfirmedTour = props => {
 
   useEffect(() => {
     // getConfirmedTour();
-    getConfirmedTourAccept()
+    getConfirmedTourAccept();
   }, []);
 
   // const getConfirmedTour = async () => {
   //   setLoading(true);
   //   let formdata = new FormData();
   //   formdata.append('status', '');
-  //   const {responseJson, err} = await requestGetApi(
+  //   const {responseJson, err} = await requestPostApi(
   //     confirmed_tour,
   //     formdata,
   //     'POST',
@@ -84,14 +88,14 @@ const ConfirmedTour = props => {
   //     setMy_Alert(true);
   //   }
   // };
-  const getConfirmedTourAccept = async (value) => {
-    console.log('==================================value==',value);
+  const getConfirmedTourAccept = async value => {
+    console.log('==================================value==', value);
     setDATA([]);
-   
+
     setLoading(true);
     let formdata = new FormData();
-    formdata.append('status', value != undefined ? value : "" );
-    console.log('==================formdata==================',formdata);
+    formdata.append('status', value != undefined ? value : '');
+    console.log('==================formdata==================', formdata);
     const {responseJson, err} = await requestPostApi(
       confirmed_tour,
       formdata,
@@ -137,7 +141,7 @@ const ConfirmedTour = props => {
           <TouchableOpacity
             onPress={() => {
               setSelectButton('showall');
-              getConfirmedTourAccept()
+              getConfirmedTourAccept();
             }}
             style={{
               justifyContent: 'center',
@@ -166,7 +170,7 @@ const ConfirmedTour = props => {
           <TouchableOpacity
             onPress={() => {
               setSelectButton('accepted');
-              getConfirmedTourAccept("1");
+              getConfirmedTourAccept('1');
             }}
             style={{
               justifyContent: 'center',
@@ -195,7 +199,7 @@ const ConfirmedTour = props => {
           <TouchableOpacity
             onPress={() => {
               setSelectButton('rejected');
-              getConfirmedTourAccept("2")
+              getConfirmedTourAccept('2');
             }}
             style={{
               justifyContent: 'center',
@@ -222,9 +226,7 @@ const ConfirmedTour = props => {
             </Text>
           </TouchableOpacity>
         </View>
-        {
-          console.log("selectButton..........",selectButton)
-        }
+        {console.log('selectButton..........', selectButton)}
         {selectButton === 'showall' ? (
           <>
             {Data.length > 0 ? (
@@ -232,15 +234,15 @@ const ConfirmedTour = props => {
                 <FlatList
                   data={Data}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={(item, index) => {
+                  renderItem={({item, index}) => {
                     // console.log("adahsgdjagdsj",item?.im);
                     return (
                       <TouchableOpacity
                         // key={index}
                         onPress={() => {
-                          props.navigation.navigate('ConfirmedTourDetails', {
-                            tourId: item.item?.id,
-                          });
+                          // props.navigation.navigate('ConfirmedTourDetails', {
+                          //   tourId: item.item?.id,
+                          // });
                         }}
                         style={{
                           alignSelf: 'center',
@@ -261,8 +263,8 @@ const ConfirmedTour = props => {
                           <View style={{flexDirection: 'row'}}>
                             <Text style={styles.bookingIdTxt}>Booking ID:</Text>
                             <Text style={styles.bookingIdN}>
-                              {item.item?.boooking_id != null
-                                ? item.item?.boooking_id
+                              {item?.boooking_id != null
+                                ? item?.boooking_id
                                 : 'not found'}
                             </Text>
                             {/* <Image
@@ -278,9 +280,11 @@ const ConfirmedTour = props => {
                               borderRadius: 50,
                               flexDirection: 'row',
                               borderColor:
-                              item.item?.status_id == '1'
-                              ? '#4CBA08'
-                              : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                                item?.status_id == '1'
+                                  ? '#4CBA08'
+                                  : item?.status_id == '2'
+                                  ? '#FF0000'
+                                  : '#9C9D9F',
                               borderWidth: 1,
                               justifyContent: 'center',
                               alignItems: 'center',
@@ -290,9 +294,11 @@ const ConfirmedTour = props => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 backgroundColor:
-                                item.item?.status_id == '1'
-                                ? '#4CBA08'
-                                : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                                  item?.status_id == '1'
+                                    ? '#4CBA08'
+                                    : item?.status_id == '2'
+                                    ? '#FF0000'
+                                    : '#9C9D9F',
                                 borderRadius: 100,
                                 height: 10,
                                 width: 10,
@@ -304,11 +310,13 @@ const ConfirmedTour = props => {
                                 fontWeight: '500',
                                 fontSize: 12,
                                 color:
-                                item.item?.status_id == '1'
-                                ? '#4CBA08'
-                                : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                                  item?.status_id == '1'
+                                    ? '#4CBA08'
+                                    : item?.status_id == '2'
+                                    ? '#FF0000'
+                                    : '#9C9D9F',
                               }}>
-                              {item.item?.status}
+                              {item?.status}
                             </Text>
                           </View>
                         </View>
@@ -341,8 +349,8 @@ const ConfirmedTour = props => {
                               }}
                               // source={require('../../assets/images/largeimages/Rectangle9.png')}
                               source={
-                                item?.item?.images != ''
-                                  ? {uri: `${item?.item?.images}`}
+                                item?.images != ''
+                                  ? {uri: `${item?.images}`}
                                   : require('../../assets/images/largeimages/Rectangle9.png')
                               }
                             />
@@ -353,8 +361,8 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={1}
                                 style={[styles.uploadTxt, {fontWeight: '600'}]}>
-                                {item?.item?.tour_image}
-                                {item?.item?.tour_title}
+                                {item?.tour_image}
+                                {item?.tour_title}
                               </Text>
                             </View>
 
@@ -362,7 +370,7 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={2}
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                                {item.item?.description}
+                                {item?.description}
                               </Text>
                             </View>
 
@@ -381,10 +389,10 @@ const ConfirmedTour = props => {
                               <Text
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                                 {' '}
-                                Duration {item.item?.duration} Hours
+                                Duration {item?.duration} Hours
                               </Text>
                             </View>
-                            <View
+                            {/* <View
                               style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
@@ -399,9 +407,9 @@ const ConfirmedTour = props => {
                               <Text
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                                 {' '}
-                                {item.item?.created_date}
+                                {item?.created_date}
                               </Text>
-                            </View>
+                            </View> */}
                           </View>
                           {/* <View style={{width: '30%'}}></View> */}
                         </View>
@@ -424,10 +432,24 @@ const ConfirmedTour = props => {
                               ]}>
                               No of People
                             </Text>
-                            <Text
-                              style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                              {item.item.no_of_person}
-                            </Text>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/green_3-people.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                {item.no_of_person}
+                              </Text>
+                            </View>
                           </View>
                           <View style={{marginLeft: 10, flex: 0.8}}>
                             <Text
@@ -441,8 +463,8 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={2}
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                                {item.item?.selectd_date != null
-                                  ? item.item?.selectd_date
+                                {item?.selectd_date != null
+                                  ? item?.selectd_date
                                   : '--'}
                               </Text>
                             </View>
@@ -470,14 +492,14 @@ const ConfirmedTour = props => {
                                 },
                               ]}>
                               {' '}
-                              ${item.item?.total_amount}
+                              ${item?.total_amount}
                             </Text>
                           </View>
 
                           <TouchableOpacity
                             onPress={() => {
                               setCancellationtext(
-                                item?.item?.cancellation_policy,
+                                item?.cancellation_policy,
                               );
                               setModalVisible(true);
                             }}
@@ -562,21 +584,21 @@ const ConfirmedTour = props => {
             )}
           </>
         ) : null}
-         {selectButton === 'accepted' ? (
+        {selectButton === 'accepted' ? (
           <>
             {Data.length > 0 ? (
               <View style={{justifyContent: 'center', flex: 1}}>
                 <FlatList
                   data={Data}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={(item, index) => {
+                  renderItem={({item, index}) => {
                     // console.log("adahsgdjagdsj",item?.im);
                     return (
                       <TouchableOpacity
-                        // key={index}
+                        key={index}
                         onPress={() => {
                           props.navigation.navigate('ConfirmedTourDetails', {
-                            tourId: item.item?.id,
+                            tourId: item?.id,
                           });
                         }}
                         style={{
@@ -598,8 +620,8 @@ const ConfirmedTour = props => {
                           <View style={{flexDirection: 'row'}}>
                             <Text style={styles.bookingIdTxt}>Booking ID:</Text>
                             <Text style={styles.bookingIdN}>
-                              {item.item?.boooking_id != null
-                                ? item.item?.boooking_id
+                              {item?.boooking_id != null
+                                ? item?.boooking_id
                                 : 'not found'}
                             </Text>
                             {/* <Image
@@ -615,7 +637,7 @@ const ConfirmedTour = props => {
                               borderRadius: 50,
                               flexDirection: 'row',
                               borderColor:
-                                item.item?.status_id == '1'
+                                item?.status_id == '1'
                                   ? '#4CBA08'
                                   : '#9C9D9F',
                               borderWidth: 1,
@@ -627,7 +649,7 @@ const ConfirmedTour = props => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 backgroundColor:
-                                  item.item?.status_id == '1'
+                                  item?.status_id == '1'
                                     ? '#4CBA08'
                                     : '#9C9D9F',
                                 borderRadius: 100,
@@ -641,11 +663,11 @@ const ConfirmedTour = props => {
                                 fontWeight: '500',
                                 fontSize: 12,
                                 color:
-                                  item.item?.status_id == '1'
+                                  item?.status_id == '1'
                                     ? '#4CBA08'
                                     : '#9C9D9F',
                               }}>
-                              {item.item?.status}
+                              {item?.status}
                             </Text>
                           </View>
                         </View>
@@ -678,8 +700,8 @@ const ConfirmedTour = props => {
                               }}
                               // source={require('../../assets/images/largeimages/Rectangle9.png')}
                               source={
-                                item?.item?.images != ''
-                                  ? {uri: `${item?.item?.images}`}
+                                item?.images != ''
+                                  ? {uri: `${item?.images}`}
                                   : require('../../assets/images/largeimages/Rectangle9.png')
                               }
                             />
@@ -690,8 +712,8 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={1}
                                 style={[styles.uploadTxt, {fontWeight: '600'}]}>
-                                {item?.item?.tour_image}
-                                {item?.item?.tour_title}
+                                {item?.tour_image}
+                                {item?.tour_title}
                               </Text>
                             </View>
 
@@ -699,7 +721,7 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={2}
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                                {item.item?.description}
+                                {item?.description}
                               </Text>
                             </View>
 
@@ -718,10 +740,10 @@ const ConfirmedTour = props => {
                               <Text
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                                 {' '}
-                                Duration {item.item?.duration} Hours
+                                Duration {item?.duration} Hours
                               </Text>
                             </View>
-                            <View
+                            {/* <View
                               style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
@@ -736,9 +758,9 @@ const ConfirmedTour = props => {
                               <Text
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                                 {' '}
-                                {item.item?.created_date}
+                                {item?.created_date}
                               </Text>
-                            </View>
+                            </View> */}
                           </View>
                           {/* <View style={{width: '30%'}}></View> */}
                         </View>
@@ -761,10 +783,24 @@ const ConfirmedTour = props => {
                               ]}>
                               No of People
                             </Text>
-                            <Text
-                              style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                              {item.item.no_of_person}
-                            </Text>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/green_3-people.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                {item?.no_of_person}
+                              </Text>
+                            </View>
                           </View>
                           <View style={{marginLeft: 10, flex: 0.8}}>
                             <Text
@@ -778,8 +814,8 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={2}
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                                {item.item?.selectd_date != null
-                                  ? item.item?.selectd_date
+                                {item?.selectd_date != null
+                                  ? item?.selectd_date
                                   : '--'}
                               </Text>
                             </View>
@@ -807,14 +843,14 @@ const ConfirmedTour = props => {
                                 },
                               ]}>
                               {' '}
-                              ${item.item?.total_amount}
+                              ${item?.total_amount}
                             </Text>
                           </View>
 
                           <TouchableOpacity
                             onPress={() => {
                               setCancellationtext(
-                                item?.item?.cancellation_policy,
+                                item?.cancellation_policy,
                               );
                               setModalVisible(true);
                             }}
@@ -899,21 +935,21 @@ const ConfirmedTour = props => {
             )}
           </>
         ) : null}
-         {selectButton === 'rejected' ? (
+        {selectButton === 'rejected' ? (
           <>
             {Data.length > 0 ? (
               <View style={{justifyContent: 'center', flex: 1}}>
                 <FlatList
                   data={Data}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={(item, index) => {
-                    // console.log("adahsgdjagdsj",item?.im);
+                  renderItem={({item, index}) => {
+                    // console.log("adahsgdjagdsj",item);
                     return (
                       <TouchableOpacity
-                        // key={index}
+                        key={index}
                         onPress={() => {
                           props.navigation.navigate('ConfirmedTourDetails', {
-                            tourId: item.item?.id,
+                            tourId: item?.id,
                           });
                         }}
                         style={{
@@ -935,8 +971,8 @@ const ConfirmedTour = props => {
                           <View style={{flexDirection: 'row'}}>
                             <Text style={styles.bookingIdTxt}>Booking ID:</Text>
                             <Text style={styles.bookingIdN}>
-                              {item.item?.boooking_id != null
-                                ? item.item?.boooking_id
+                              {item?.boooking_id != null
+                                ? item?.boooking_id
                                 : 'not found'}
                             </Text>
                             {/* <Image
@@ -952,9 +988,11 @@ const ConfirmedTour = props => {
                               borderRadius: 50,
                               flexDirection: 'row',
                               borderColor:
-                                item.item?.status_id == '1'
+                                item?.status_id == '1'
                                   ? '#4CBA08'
-                                  : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                                  : item?.status_id == '2'
+                                  ? '#FF0000'
+                                  : '#9C9D9F',
                               borderWidth: 1,
                               justifyContent: 'center',
                               alignItems: 'center',
@@ -964,9 +1002,11 @@ const ConfirmedTour = props => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 backgroundColor:
-                                item.item?.status_id == '1'
-                                ? '#4CBA08'
-                                : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                                  item?.status_id == '1'
+                                    ? '#4CBA08'
+                                    : item?.status_id == '2'
+                                    ? '#FF0000'
+                                    : '#9C9D9F',
                                 borderRadius: 100,
                                 height: 10,
                                 width: 10,
@@ -978,11 +1018,13 @@ const ConfirmedTour = props => {
                                 fontWeight: '500',
                                 fontSize: 12,
                                 color:
-                                item.item?.status_id == '1'
-                                ? '#4CBA08'
-                                : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                                  item?.status_id == '1'
+                                    ? '#4CBA08'
+                                    : item?.status_id == '2'
+                                    ? '#FF0000'
+                                    : '#9C9D9F',
                               }}>
-                              {item.item?.status}
+                              {item?.status}
                             </Text>
                           </View>
                         </View>
@@ -1015,8 +1057,8 @@ const ConfirmedTour = props => {
                               }}
                               // source={require('../../assets/images/largeimages/Rectangle9.png')}
                               source={
-                                item?.item?.images != ''
-                                  ? {uri: `${item?.item?.images}`}
+                                item?.images != ''
+                                  ? {uri: `${item?.images}`}
                                   : require('../../assets/images/largeimages/Rectangle9.png')
                               }
                             />
@@ -1027,8 +1069,8 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={1}
                                 style={[styles.uploadTxt, {fontWeight: '600'}]}>
-                                {item?.item?.tour_image}
-                                {item?.item?.tour_title}
+                                {item?.tour_image}
+                                {item?.tour_title}
                               </Text>
                             </View>
 
@@ -1036,7 +1078,7 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={2}
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                                {item.item?.description}
+                                {item?.description}
                               </Text>
                             </View>
 
@@ -1055,10 +1097,10 @@ const ConfirmedTour = props => {
                               <Text
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                                 {' '}
-                                Duration {item.item?.duration} Hours
+                                Duration {item?.duration} Hours
                               </Text>
                             </View>
-                            <View
+                            {/* <View
                               style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
@@ -1073,9 +1115,9 @@ const ConfirmedTour = props => {
                               <Text
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                                 {' '}
-                                {item.item?.created_date}
+                                {item?.created_date}
                               </Text>
-                            </View>
+                            </View> */}
                           </View>
                           {/* <View style={{width: '30%'}}></View> */}
                         </View>
@@ -1098,10 +1140,24 @@ const ConfirmedTour = props => {
                               ]}>
                               No of People
                             </Text>
-                            <Text
-                              style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                              {item.item.no_of_person}
-                            </Text>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/green_3-people.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                {item?.no_of_person}
+                              </Text>
+                            </View>
                           </View>
                           <View style={{marginLeft: 10, flex: 0.8}}>
                             <Text
@@ -1115,8 +1171,8 @@ const ConfirmedTour = props => {
                               <Text
                                 numberOfLines={2}
                                 style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                                {item.item?.selectd_date != null
-                                  ? item.item?.selectd_date
+                                {item?.selectd_date != null
+                                  ? item?.selectd_date
                                   : '--'}
                               </Text>
                             </View>
@@ -1144,14 +1200,14 @@ const ConfirmedTour = props => {
                                 },
                               ]}>
                               {' '}
-                              ${item.item?.total_amount}
+                              ${item?.total_amount}
                             </Text>
                           </View>
 
                           <TouchableOpacity
                             onPress={() => {
                               setCancellationtext(
-                                item?.item?.cancellation_policy,
+                                item?.cancellation_policy,
                               );
                               setModalVisible(true);
                             }}
@@ -1340,7 +1396,7 @@ const styles = StyleSheet.create({
     color: '#505667',
   },
   bookingIdN: {
-    color: '#CECECE',
+    color: '#8F93A0',
     fontSize: 14,
     fontWeight: '400',
     fontFamily: FONTS.regular,

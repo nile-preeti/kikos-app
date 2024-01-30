@@ -422,6 +422,7 @@ const PhotoBoothPurchased = props => {
                 viewabilityConfig={{
                   itemVisiblePercentThreshold: 50,
                 }}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
                   return (
                     <View style={styles.cardContainer}>

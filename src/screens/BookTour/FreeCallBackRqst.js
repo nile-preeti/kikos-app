@@ -101,7 +101,7 @@ import {
   <FlatList
             data={data}
             keyExtractor={(item,index)=>index.toString()}
-            renderItem={(item, index) => {
+            renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                 onPress={() => {props.navigation.navigate('ConfirmedTourDetails',{tourId:1})}}

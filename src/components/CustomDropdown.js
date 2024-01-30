@@ -40,7 +40,7 @@ const CustomDropdown = ({options, selectedValue, onSelect}) => {
           <FlatList
             data={options}
             
-            keyExtractor={item => item.toString()}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => (
               <TouchableOpacity onPress={() => handleSelect(item)}>
                 <Text style={styles.optionText}>{item}</Text>

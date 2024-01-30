@@ -245,6 +245,7 @@ const ContactUs = props => {
               }}></View>
             {/* <FlatList
                   showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
                   data={DATA2}
                   renderItem={({item, index}) => {
                     return (

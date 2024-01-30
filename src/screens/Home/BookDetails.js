@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   Image,
   Dimensions,
   TouchableOpacity,
@@ -521,7 +520,7 @@ const BookDetails = props => {
                   fontWeight: '600',
                   textAlign: 'center',
                 }}>
-                To book an tour for {tourdetails?.title}.
+                To book a tour for {tourdetails?.title}.
               </Text>
               <Text
                 style={{

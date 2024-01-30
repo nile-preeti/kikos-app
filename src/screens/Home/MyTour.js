@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,7 +10,6 @@ import {
   SafeAreaView,
   Modal,
 } from 'react-native';
-import React, {useState, useEffect, useCallback, useMemo, useRef} from 'react';
 import CustomHeader from '../../components/CustomeHeader';
 import {dimensions} from '../../utility/Mycolors';
 import images from '../../global/images';
@@ -20,7 +20,7 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Calendar, LocaleConfig, CalendarUtils} from 'react-native-calendars';
 import {DASHDATA} from '../../redux/types';
-import {confirmed_tour, requestGetApi} from '../../WebApi/Service';
+import {confirmed_tour, requestGetApi, requestPostApi} from '../../WebApi/Service';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
 import {useSelector, useDispatch} from 'react-redux';
@@ -34,30 +34,12 @@ const MyTour = props => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectButton, setSelectButton] = useState('showall');
   const [modalVisible, setModalVisible] = useState(false);
-const[cancellationtext,setCancellationtext]=useState("");
+  const [cancellationtext, setCancellationtext] = useState('');
 
   const [Data, setDATA] = useState([]);
   const [markedDates, setMarkedDates] = useState({});
-  const data = [
-    {
-      id: 1,
-      image: require('../../assets/images/largeimages/dummydetail.png'),
-    },
-    {
-      id: 1,
-      image: require('../../assets/images/largeimages/dummydetail.png'),
-    },
-    {
-      id: 1,
-      image: require('../../assets/images/largeimages/dummydetail.png'),
-    },
-  ];
-  const onViewableItemsChanged = useCallback(({viewableItems}) => {
-    if (viewableItems.length > 0) {
-      setCurrentIndex(viewableItems[0].index);
-    }
-  }, []);
-
+   
+   
   useEffect(() => {
     getConfirmedTour();
   }, []);
@@ -66,7 +48,7 @@ const[cancellationtext,setCancellationtext]=useState("");
     setLoading(true);
     let formdata = new FormData();
     formdata.append('status', '');
-    const {responseJson, err} = await requestGetApi(
+    const {responseJson, err} = await requestPostApi(
       confirmed_tour,
       formdata,
       'POST',
@@ -77,7 +59,6 @@ const[cancellationtext,setCancellationtext]=useState("");
     if (err == null) {
       if (responseJson.status == true) {
         setDATA(responseJson.data);
-        
       } else {
         setalert_sms(responseJson.message);
         setMy_Alert(true);
@@ -88,33 +69,34 @@ const[cancellationtext,setCancellationtext]=useState("");
     }
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7'}}>
-       <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
+    <SafeAreaView style={{backgroundColor: '#EAEDF7', flex: 1}}>
+      <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <CustomHeader
           title={'My Tours Booking'}
           onBackPress={() => {
             props.navigation.goBack();
           }}
         />
-        
-        <View style={{marginBottom: 100}}>
+
+        <View style={{justifyContent: 'center', marginTop: 15, flex: 1}}>
           <FlatList
+            Vertical={true}
             data={Data}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={(item, index) => {
-                // console.log("adahsgdjagdsj",item?.im);
-              return (
+            renderItem={({item, index}) => {
+            return (
                 <TouchableOpacity
-                key={index}
+                  key={index}
                   onPress={() => {
-                    props.navigation.navigate('ConfirmedTourDetails', {
-                      tourId: item.item?.id,
-                    });
+                    // props.navigation.navigate('ConfirmedTourDetails', {
+                    //   tourId: item?.id,
+                    // });
                   }}
                   style={{
                     alignSelf: 'center',
                     alignItems: 'center',
-                    marginTop: 15,
+                    // marginTop: 15,
+                    marginBottom: 25,
                     width: '90%',
                     backgroundColor: '#fff',
                     borderRadius: 10,
@@ -128,7 +110,11 @@ const[cancellationtext,setCancellationtext]=useState("");
                   <View style={styles.bookingIdContainer}>
                     <View style={{flexDirection: 'row'}}>
                       <Text style={styles.bookingIdTxt}>Booking ID:</Text>
-                      <Text style={styles.bookingIdN}>{item.item?.boooking_id != null ? item.item?.boooking_id : "not found"}</Text>
+                      <Text style={styles.bookingIdN}>
+                        {item?.boooking_id != null
+                          ? item?.boooking_id
+                          : 'not found'}
+                      </Text>
                       {/* <Image
                         source={images.document}
                         style={{marginLeft: 7, marginTop: 3}}
@@ -141,7 +127,12 @@ const[cancellationtext,setCancellationtext]=useState("");
                         width: 96,
                         borderRadius: 50,
                         flexDirection: 'row',
-                        borderColor: '#4CBA08',
+                        borderColor:
+                          item?.status_id == '1'
+                            ? '#4CBA08'
+                            : item?.status_id == '2'
+                            ? '#FF0000'
+                            : '#9C9D9F',
                         borderWidth: 1,
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -150,7 +141,12 @@ const[cancellationtext,setCancellationtext]=useState("");
                         style={{
                           justifyContent: 'center',
                           alignItems: 'center',
-                          backgroundColor: '#4CBA08',
+                          backgroundColor:
+                            item?.status_id == '1'
+                              ? '#4CBA08'
+                              : item?.status_id == '2'
+                              ? '#FF0000'
+                              : '#9C9D9F',
                           borderRadius: 100,
                           height: 10,
                           width: 10,
@@ -161,8 +157,14 @@ const[cancellationtext,setCancellationtext]=useState("");
                         style={{
                           fontWeight: '500',
                           fontSize: 12,
-                          color: '#4CBA08',
-                        }}>{item.item?.status}
+                          color:
+                            item?.status_id == '1'
+                              ? '#4CBA08'
+                              : item?.status_id == '2'
+                              ? '#FF0000'
+                              : '#9C9D9F',
+                        }}>
+                        {item?.status}
                       </Text>
                     </View>
                   </View>
@@ -194,22 +196,32 @@ const[cancellationtext,setCancellationtext]=useState("");
                           // backgroundColor:'gray'
                         }}
                         // source={require('../../assets/images/largeimages/Rectangle9.png')}
-                        source={item?.item?.images != "" ? {uri:`${item?.item?.images}`} : require('../../assets/images/largeimages/Rectangle9.png')}
+                        source={
+                          item?.images != ''
+                            ? {uri: `${item?.images}`}
+                            : require('../../assets/images/largeimages/Rectangle9.png')
+                        }
                       />
                     </View>
 
-                    <View style={{width:"80%",marginLeft: 10}}>
-                    <View style={{width:"90%"}}>
-                        <Text numberOfLines={1} style={[styles.uploadTxt, {fontWeight: '600'}]}>{item?.item?.tour_image}{item?.item?.tour_title}
-                      </Text>
-                        </View>
-                     
-                      <View style={{width:'100%'}}>
-                      <Text numberOfLines={2} style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                        {item.item?.description}
+                    <View style={{width: '80%', marginLeft: 10}}>
+                      <View style={{width: '90%'}}>
+                        <Text
+                          numberOfLines={1}
+                          style={[styles.uploadTxt, {fontWeight: '600'}]}>
+                          {item?.tour_image}
+                          {item?.tour_title}
                         </Text>
                       </View>
-                     
+
+                      <View style={{width: '100%'}}>
+                        <Text
+                          numberOfLines={2}
+                          style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                          {item?.description}
+                        </Text>
+                      </View>
+
                       <View
                         style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Image
@@ -217,19 +229,19 @@ const[cancellationtext,setCancellationtext]=useState("");
                           source={require('../../assets/images/Icons/calendar.png')}></Image>
                         <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                           {' '}
-                          Duration {item.item?.duration} Hours
+                          Duration {item?.duration} Hours
                         </Text>
                       </View>
-                      <View
+                      {/* <View
                         style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Image
                           style={{width: 12, height: 12, resizeMode: 'stretch'}}
                           source={require('../../assets/images/Icons/clock.png')}></Image>
                         <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                           {' '}
-                          {item.item?.created_date}
+                          {item?.created_date}
                         </Text>
-                      </View>
+                      </View> */}
                     </View>
                     {/* <View style={{width: '30%'}}></View> */}
                   </View>
@@ -241,9 +253,9 @@ const[cancellationtext,setCancellationtext]=useState("");
                       marginTop: 15,
                       width: '95%',
                       // height:50,
-                      // flex:1 
+                      // flex:1
                     }}>
-                    <View style={{marginLeft: 10,width:'40%',flex:0.7,  }}>
+                    <View style={{marginLeft: 10, width: '40%', flex: 0.7}}>
                       <Text
                         style={[
                           styles.uploadTxt,
@@ -251,11 +263,18 @@ const[cancellationtext,setCancellationtext]=useState("");
                         ]}>
                         No of People
                       </Text>
-                      <Text style={[styles.forAllTxt, {color:'#8F93A0'}]}>
-                        {item.item.no_of_person}
-                      </Text>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Image
+                          style={{width: 12, height: 12, resizeMode: 'stretch'}}
+                          source={require('../../assets/images/Icons/green_3-people.png')}></Image>
+                        <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                          {' '}
+                          {item?.no_of_person}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={{marginLeft: 10 , flex:0.8,   }}>
+                    <View style={{marginLeft: 10, flex: 0.8}}>
                       <Text
                         style={[
                           styles.uploadTxt,
@@ -263,12 +282,15 @@ const[cancellationtext,setCancellationtext]=useState("");
                         ]}>
                         Selected Date:
                       </Text>
-                      <View style={{width:'100%'}}>
-                      <Text numberOfLines={2} style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                        {item.item?.selectd_date != null ? item.item?.selectd_date : "--" } 
-                      </Text>
+                      <View style={{width: '100%'}}>
+                        <Text
+                          numberOfLines={2}
+                          style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                          {item?.selectd_date != null
+                            ? item?.selectd_date
+                            : '--'}
+                        </Text>
                       </View>
-                    
                     </View>
                   </View>
                   <View style={[styles.line, {marginTop: 18}]}></View>
@@ -287,14 +309,15 @@ const[cancellationtext,setCancellationtext]=useState("");
                           {color: '#3DA1E3', fontWeight: '700', fontSize: 18},
                         ]}>
                         {' '}
-                        ${item.item?.total_amount}
+                        ${item?.total_amount}
                       </Text>
                     </View>
 
                     <TouchableOpacity
-                      onPress={() => {  
-                        setCancellationtext(item?.item?.cancellation_policy);
-                        setModalVisible(true);}}
+                      onPress={() => {
+                        setCancellationtext(item?.cancellation_policy);
+                        setModalVisible(true);
+                      }}
                       style={{
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -340,7 +363,7 @@ const[cancellationtext,setCancellationtext]=useState("");
           }}>
           <View
             style={{
-              height: (dimensions.SCREEN_HEIGHT * 42) / 100,
+              height: 'auto',
               width: dimensions.SCREEN_WIDTH,
               backgroundColor: '#FBFBFB',
               position: 'absolute',
@@ -373,18 +396,19 @@ const[cancellationtext,setCancellationtext]=useState("");
                     fontSize: 13,
                     textAlign: 'center',
                   },
-                ]}>{cancellationtext}
+                ]}>
+                {cancellationtext}
               </Text>
             </View>
 
             <CustomButton
-            borderColor={'#83CDFD'}
+              borderColor={'#83CDFD'}
               txtStyle={{color: '#fff', fontSize: 16, fontWeight: '400'}}
               backgroundColor={COLORS.Primary_Blue}
               title={'Close'}
               onPress={() => {
                 setModalVisible(false);
-                setCancellationtext("")
+                setCancellationtext('');
               }}
             />
           </View>
@@ -428,7 +452,7 @@ const styles = StyleSheet.create({
     color: '#505667',
   },
   bookingIdN: {
-    color: '#CECECE',
+    color: '#8F93A0',
     fontSize: 14,
     fontWeight: '400',
     fontFamily: FONTS.regular,

@@ -64,6 +64,7 @@ const ConfirmedTourScreen = props => {
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={DATA2}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             return (
               <>

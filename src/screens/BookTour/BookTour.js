@@ -133,6 +133,7 @@ const BookTour = props => {
               horizontal
               showsHorizontalScrollIndicator={false}
               data={horizontalData}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({item, index}) => {
                 return (
                   <>
@@ -424,6 +425,7 @@ const BookTour = props => {
              horizontal
              showsHorizontalScrollIndicator={false}
              data={DATA}
+             keyExtractor={(item, index) => index.toString()}
              // style={{marginRight:10}}
              renderItem={({item, index}) => {
                return (
@@ -540,6 +542,7 @@ const BookTour = props => {
             <FlatList
               showsHorizontalScrollIndicator={false}
               data={popularData}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({item, index}) => {
                 return (
                   <>

@@ -207,6 +207,7 @@ const Audio = props => {
                
                showsVerticalScrollIndicator={false}
                 data={virtualdata}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
                   return (
                     <>
@@ -428,6 +429,7 @@ const Audio = props => {
               <FlatList
                 showsVerticalScrollIndicator={false}
                 data={virtualdata}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
                   return (
                     <>

@@ -256,6 +256,7 @@ const[calendatData,setCalendatData]=useState([]);
             <FlatList
               showsHorizontalScrollIndicator={false}
               data={DATA}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({item, index}) => {
                 return (
                   <>

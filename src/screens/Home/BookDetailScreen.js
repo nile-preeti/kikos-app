@@ -72,6 +72,7 @@ const BookDetailScreen = (props) => {
           horizontal={true}
           pagingEnabled
           // onViewableItemsChanged={onViewableItemsChanged}
+          keyExtractor={(item, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           viewabilityConfig={{
             itemVisiblePercentThreshold: 50,
