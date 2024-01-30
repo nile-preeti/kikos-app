@@ -228,7 +228,7 @@ const Profile = props => {
           <View style={styles.cardContainer}>
             <View style={{marginTop: 20}}>
               <Text style={styles.title}>Confirmed Tour</Text>
-              <Text style={styles.number}>08</Text>
+              <Text style={styles.number}>{DATA?.confirmed_tour}</Text>
 
               <TouchableOpacity style={styles.cardbtn} 
               onPress={() => {
@@ -268,7 +268,7 @@ const Profile = props => {
           <View style={[styles.cardContainer,{paddingLeft:30}]}>
             <View style={{marginTop: 20}}>
               <Text style={styles.title}>Virtual Audio Purchased</Text>
-              <Text style={styles.number}>05</Text>
+              <Text style={styles.number}>{DATA?.virtual_audio_purchased}</Text>
 
               <TouchableOpacity style={styles.cardbtn} 
               onPress={() => {
@@ -312,9 +312,9 @@ const Profile = props => {
               {/* <Text style={styles.number}>05</Text> */}
               <View style={styles.hrcontainer}>
                   <Image style={{height: 15, width: 15, tintColor: '#CECECE'}} source={images.gallaryicon} />
-                  <Text style={styles.titleTxt}>432 Photos</Text>
+                  <Text style={styles.titleTxt}>{DATA?.total_purchased_photo} Photos</Text>
                   <Image style={{height:15,width:15,marginLeft:5,tintColor: '#CECECE'}} source={images.gallaryvideoicon} />
-                  <Text style={styles.titleTxt}>432 Photos</Text>
+                  <Text style={styles.titleTxt}>{DATA?.total_purchased_video} Videos</Text>
                 </View>
               <TouchableOpacity style={styles.cardbtn}
                onPress={() => {

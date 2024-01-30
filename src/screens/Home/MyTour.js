@@ -34,6 +34,8 @@ const MyTour = props => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectButton, setSelectButton] = useState('showall');
   const [modalVisible, setModalVisible] = useState(false);
+const[cancellationtext,setCancellationtext]=useState("");
+
   const [Data, setDATA] = useState([]);
   const [markedDates, setMarkedDates] = useState({});
   const data = [
@@ -88,7 +90,7 @@ const MyTour = props => {
     <SafeAreaView style={{backgroundColor: COLORS.Primary_Blue}}>
       <View style={{backgroundColor: '#EAEDF7'}}>
         <CustomHeader
-          title={'My Tour'}
+          title={'My Tours Booking'}
           onBackPress={() => {
             props.navigation.goBack();
           }}
@@ -99,7 +101,7 @@ const MyTour = props => {
             data={Data}
             keyExtractor={(item, index) => index.toString()}
             renderItem={(item, index) => {
-                console.log("adahsgdjagdsj",item.item);
+                // console.log("adahsgdjagdsj",item?.im);
               return (
                 <TouchableOpacity
                 key={index}
@@ -188,23 +190,23 @@ const MyTour = props => {
                           height: 80,
                           resizeMode: 'stretch',
                           borderRadius: 10,
+                          // backgroundColor:'gray'
                         }}
-                        source={require('../../assets/images/largeimages/Rectangle9.png')}
-                        // source={{uri:`${item?.item.item}`}}
+                        // source={require('../../assets/images/largeimages/Rectangle9.png')}
+                        source={item?.item?.images != "" ? {uri:`${item?.item?.images}`} : require('../../assets/images/largeimages/Rectangle9.png')}
                       />
                     </View>
 
                     <View style={{width:"80%",marginLeft: 10}}>
                     <View style={{width:"90%"}}>
-                        <Text numberOfLines={1} style={[styles.uploadTxt, {fontWeight: '600'}]}>{item?.item?.tour_image}{item?.item?.tour_image}
+                        <Text numberOfLines={1} style={[styles.uploadTxt, {fontWeight: '600'}]}>{item?.item?.tour_image}{item?.item?.tour_title}
                       </Text>
                         </View>
                      
-                      <View style={{width:"90%"}}>
+                      <View style={{width:'100%'}}>
                       <Text numberOfLines={2} style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                        {/* {item.item?.cancellation_policy} */}
-                        For All Ages! Great For Families!
-                      </Text>
+                        {item.item?.description}
+                        </Text>
                       </View>
                      
                       <View
@@ -224,11 +226,11 @@ const MyTour = props => {
                           source={require('../../assets/images/Icons/clock.png')}></Image>
                         <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                           {' '}
-                          19 October, 2023 Saturday
+                          {item.item?.created_date}
                         </Text>
                       </View>
                     </View>
-                    <View style={{width: '30%'}}></View>
+                    {/* <View style={{width: '30%'}}></View> */}
                   </View>
                   <View
                     style={{
@@ -237,8 +239,10 @@ const MyTour = props => {
                       alignItems: 'center',
                       marginTop: 15,
                       width: '95%',
+                      // height:50,
+                      // flex:1 
                     }}>
-                    <View style={{marginLeft: 10}}>
+                    <View style={{marginLeft: 10,width:'40%',flex:0.7,  }}>
                       <Text
                         style={[
                           styles.uploadTxt,
@@ -246,11 +250,11 @@ const MyTour = props => {
                         ]}>
                         No of People
                       </Text>
-                      <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                        {item.item.no_of_adults}
+                      <Text style={[styles.forAllTxt, {color:'#8F93A0'}]}>
+                        {item.item.no_of_person}
                       </Text>
                     </View>
-                    <View style={{marginLeft: 10}}>
+                    <View style={{marginLeft: 10 , flex:0.8,   }}>
                       <Text
                         style={[
                           styles.uploadTxt,
@@ -258,9 +262,12 @@ const MyTour = props => {
                         ]}>
                         Selected Date:
                       </Text>
-                      <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                        {item.item?.selectd_date != null ? item.item?.selectd_date : "--" }
+                      <View style={{width:'100%'}}>
+                      <Text numberOfLines={2} style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                        {item.item?.selectd_date != null ? item.item?.selectd_date : "--" } 
                       </Text>
+                      </View>
+                    
                     </View>
                   </View>
                   <View style={[styles.line, {marginTop: 18}]}></View>
@@ -284,7 +291,9 @@ const MyTour = props => {
                     </View>
 
                     <TouchableOpacity
-                      onPress={() => {}}
+                      onPress={() => {  
+                        setCancellationtext(item?.item?.cancellation_policy);
+                        setModalVisible(true);}}
                       style={{
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -330,7 +339,7 @@ const MyTour = props => {
           }}>
           <View
             style={{
-              height: (dimensions.SCREEN_HEIGHT * 35) / 100,
+              height: (dimensions.SCREEN_HEIGHT * 42) / 100,
               width: dimensions.SCREEN_WIDTH,
               backgroundColor: '#FBFBFB',
               position: 'absolute',
@@ -363,23 +372,18 @@ const MyTour = props => {
                     fontSize: 13,
                     textAlign: 'center',
                   },
-                ]}>
-                Customers will receive a full refund or credit with 24 hours
-                notice of cancellation. Customers will also receive a full
-                refund or credit in case of operator cancellation due to weather
-                or other unforeseen circumstances. Contact us by phone to cancel
-                or inquire about a cancellation. No- shows will be charged the
-                full price.
+                ]}>{cancellationtext}
               </Text>
             </View>
 
             <CustomButton
-              borderColor={'#83CDFD'}
+            borderColor={'#83CDFD'}
               txtStyle={{color: '#fff', fontSize: 16, fontWeight: '400'}}
               backgroundColor={COLORS.Primary_Blue}
               title={'Close'}
               onPress={() => {
                 setModalVisible(false);
+                setCancellationtext("")
               }}
             />
           </View>

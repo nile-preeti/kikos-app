@@ -86,16 +86,20 @@ const RequestAFreeCallback = props => {
       setalert_sms('Please Enter Full Name');
       setMy_Alert(true);
     } else if (mobile == '' || mobile.trim().length == 0) {
-      setalert_sms('Please Enter Mobile Number');
+      setalert_sms('Please Enter Phone Number');
       setMy_Alert(true);
-    } else if (valueTimeZone == '' || valueTimeZone.trim().length == 0) {
-      setalert_sms('Please select Time Zone');
+    }else if (mobile.trim().length < 10) {
+      setalert_sms('Please Enter Valid Phone Number');
+      setMy_Alert(true);
+    }
+     else if (valueTimeZone == '' || valueTimeZone.trim().length == 0) {
+      setalert_sms('Please Select Time Zone');
       setMy_Alert(true);
     } else if (date == '' || date.trim().length == 0) {
-      setalert_sms('Please select Date');
+      setalert_sms('Please Select Date');
       setMy_Alert(true);
     } else if (orderTime == '' || orderTime.trim().length == 0) {
-      setalert_sms('Please select Time');
+      setalert_sms('Please Select Time');
       setMy_Alert(true);
     } else if (addNote == '' || addNote.trim().length == 0) {
       setalert_sms('Please Add a Note');
