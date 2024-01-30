@@ -81,7 +81,7 @@ const CustomDrawer = (props) => {
         </View>
         <View style={[styles.drowerComponentStyle,{marginTop: 15,}]}>
           <CustomScreen
-            image={images.home}
+            image={images.mytourbooking}
             title={'My Tours Booking'}
             onPress={() => {
               props.navigation.navigate('MyTour');

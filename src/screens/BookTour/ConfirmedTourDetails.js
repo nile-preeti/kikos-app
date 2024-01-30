@@ -132,8 +132,8 @@ const ConfirmedTourDetails = props => {
     }
   };
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.Primary_Blue, flex: 1}}>
-      <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7'}}>
+       <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <ScrollView>
           <CustomHeader
             title={'North Shore'}
@@ -533,7 +533,7 @@ const ConfirmedTourDetails = props => {
                   fontWeight: '600',
                   textAlign: 'center',
                 }}>
-                TO Book An Appointment For North Shore.
+                Your booking for "tourname"  is successfully submitted
               </Text>
               <Text
                 style={{

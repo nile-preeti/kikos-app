@@ -11,6 +11,7 @@ const images = {
   calendar: require('../assets/images/Icons/calendar.png'),
   adminIcon: require('../assets/images/Icons/Admin.png'),
   clock: require('../assets/images/Icons/clock.png'),
+  mytourbooking:require('../assets/images/Icons/MyTour_booking.png'),
   home:require('../assets/images/Icons/home2.png'),
   rightArrow:require('../assets/images/Icons/arrowright.png'),
   aboutuskikos:require('../assets/images/Icons/About_uskikos.png'),
@@ -20,6 +21,7 @@ const images = {
   termsandcond:require('../assets/images/Icons/terms_and_cond.png'),
   privacypolicy:require('../assets/images/Icons/privacy_policy.png'),
   logouticon:require('../assets/images/Icons/logout-drawer.png'),
+  nodatafound:require('../assets/images/Icons/No_data_found.png'),
 
   calandertick:require('../assets/images/Icons/calendar-tick.png'),
   calandertickblack:require('../assets/images/Icons/calendar-tick-black.png'),

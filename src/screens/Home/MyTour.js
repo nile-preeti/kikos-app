@@ -57,6 +57,7 @@ const[cancellationtext,setCancellationtext]=useState("");
       setCurrentIndex(viewableItems[0].index);
     }
   }, []);
+
   useEffect(() => {
     getConfirmedTour();
   }, []);
@@ -87,8 +88,8 @@ const[cancellationtext,setCancellationtext]=useState("");
     }
   };
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.Primary_Blue}}>
-      <View style={{backgroundColor: '#EAEDF7'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7'}}>
+       <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <CustomHeader
           title={'My Tours Booking'}
           onBackPress={() => {

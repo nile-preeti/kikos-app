@@ -39,13 +39,19 @@ const ReviewBooking = props => {
   const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
   const [selectedDate, setSelectedDate] = useState('');
   const [totaladultamount, setTotaladultamount] = useState(
-    props?.route?.params?.TourData?.age_11_price,
+    props?.route?.params?.TourData?.same_for_all != ''
+      ? props?.route?.params?.TourData?.same_for_all
+      : props?.route?.params?.TourData?.age_11_price,
   );
   const [totalSeniorAmount, setTotalSeniorAmount] = useState(
-    props?.route?.params?.TourData?.age_60_price,
+    props?.route?.params?.TourData?.same_for_all != ''
+      ? props?.route?.params?.TourData?.same_for_all
+      : props?.route?.params?.TourData?.age_60_price,
   );
   const [totalKidsAmount, setTotalKidsAmount] = useState(
-    props?.route?.params?.TourData?.under_10_age_price,
+    props?.route?.params?.TourData?.same_for_all != ''
+      ? props?.route?.params?.TourData?.same_for_all
+      : props?.route?.params?.TourData?.under_10_age_price,
   );
   const [counter, setcounter] = useState(props?.route?.params?.counter);
   const [counter1, setcounter1] = useState(props?.route?.params?.counter1);
@@ -71,7 +77,10 @@ const ReviewBooking = props => {
   ];
 
   useEffect(() => {
-    console.log('selectREVIEW DATA ...22...',props?.route?.params?.selectedDate);
+    console.log(
+      'selectREVIEW DATA ...22...',
+      props?.route?.params?.selectedDate,
+    );
     setSelectedDate(props?.route?.params?.selectedDate);
 
     // setTotaladultamount(props?.route?.params?.TourData?.age_11_price)
@@ -159,23 +168,32 @@ const ReviewBooking = props => {
               elevation: 3,
               padding: 7,
             }}>
-             <View>
+            <View>
               <Image
-                style={{width: 80, height: 80, resizeMode: 'stretch',borderRadius:5}}
-                source={{uri:`${tourdetails?.images[0]}`}}
-                />
+                style={{
+                  width: 80,
+                  height: 80,
+                  resizeMode: 'stretch',
+                  borderRadius: 5,
+                }}
+                source={{uri: `${tourdetails?.images[0]}`}}
+              />
             </View>
 
             <View style={{marginLeft: 10}}>
-            <View style={{width:'95%'}}>
-              <Text numberOfLines={2} style={[styles.uploadTxt, {fontWeight: '700'}]}>
-              {tourdetails?.title}
-              </Text>
+              <View style={{width: '95%'}}>
+                <Text
+                  numberOfLines={2}
+                  style={[styles.uploadTxt, {fontWeight: '700'}]}>
+                  {tourdetails?.title}
+                </Text>
               </View>
-              <View style={{width:'95%'}}>
-              <Text numberOfLines={2} style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-              {tourdetails?.name}
-              </Text>
+              <View style={{width: '80%'}}>
+                <Text
+                  numberOfLines={2}
+                  style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                  {tourdetails?.name}
+                </Text>
               </View>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
@@ -351,7 +369,7 @@ const ReviewBooking = props => {
               shadowRadius: 2,
               elevation: 3,
               padding: 7,
-              marginBottom:5
+              marginBottom: 5,
             }}>
             <View
               style={{
@@ -402,7 +420,7 @@ const ReviewBooking = props => {
           </View>
 
           <CustomButtonRound
-          stle={{width:'90%'}}
+            stle={{width: '90%'}}
             txtStyle={{color: '#fff', fontSize: 14, fontWeight: '400'}}
             backgroundColor={COLORS.Primary_Blue}
             title={'Pay $' + `${TotalBillAmount()}`}
@@ -412,7 +430,7 @@ const ReviewBooking = props => {
             }}
           />
           <CustomButtonRound
-           stle={{width:'90%'}}
+            stle={{width: '90%'}}
             txtStyle={{color: '#000', fontSize: 14, fontWeight: '400'}}
             backgroundColor={'#FFF'}
             title={'Cancellation Policy'}
@@ -452,20 +470,27 @@ const ReviewBooking = props => {
                 }}
               />
             </TouchableOpacity>
-<View style={{width:'80%',justifyContent:'center',alignItems:'center',marginHorizontal:40}}>
-<Text numberOfLines={3}
+            <View
               style={{
-                color: '#000',
-                 
-                marginTop: 20,
-                fontSize: 20,
-                fontWeight: '600',
-                textAlign: 'center',
+                width: '80%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginHorizontal: 40,
               }}>
-              Appointment For {tourdetails?.title} Is Booked 
-            </Text>
-</View>
-           
+              <Text
+                numberOfLines={3}
+                style={{
+                  color: '#000',
+
+                  marginTop: 20,
+                  fontSize: 20,
+                  fontWeight: '600',
+                  textAlign: 'center',
+                }}>
+                Your booking for {tourdetails?.title} is successfully submitted
+              </Text>
+            </View>
+
             <Text
               style={{
                 color: '#000',
@@ -479,19 +504,24 @@ const ReviewBooking = props => {
             <Text
               style={{
                 color: '#000',
-                textAlign:'center',
+                textAlign: 'center',
                 marginTop: 10,
                 fontSize: 13,
                 fontWeight: '400',
               }}>
-             Allow me and my team, to take you on a private tour of your  life, while visiting beautiful O’ahu.
+              Allow me and my team, to take you on a private tour of your life,
+              while visiting beautiful O’ahu.
             </Text>
 
             <CustomButton
               title={'Close'}
               borderColor={'#83CDFD'}
               onPress={() => {
-                props.navigation.navigate('BookDetails');
+                props.navigation.navigate('HomeStack', {
+                  screen: 'HomeScreen',
+                  params: {},
+                });
+                // props.navigation.navigate('BookDetails');
                 setpopup(false);
               }}
               backgroundColor={COLORS.Primary_Blue}
@@ -547,17 +577,12 @@ const ReviewBooking = props => {
                     textAlign: 'center',
                   },
                 ]}>
-                Customers will receive a full refund or credit with 24 hours
-                notice of cancellation. Customers will also receive a full
-                refund or credit in case of operator cancellation due to weather
-                or other unforeseen circumstances. Contact us by phone to cancel
-                or inquire about a cancellation. No- shows will be charged the
-                full price.
+                {props?.route?.params?.TourData?.cancellation_policy}
               </Text>
             </View>
 
             <CustomButton
-            borderColor={'#83CDFD'}
+              borderColor={'#83CDFD'}
               txtStyle={{color: '#fff', fontSize: 16, fontWeight: '400'}}
               backgroundColor={COLORS.Primary_Blue}
               title={'Close'}

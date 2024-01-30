@@ -316,7 +316,7 @@ const[calendatData,setCalendatData]=useState([]);
                                 fontFamily: FONTS.bold,
                               }}>
                               {
-                              item?.same_for_all != "" ?  "US$"+item?.same_for_all : "US$"+item?.under_10_age_price +" – /US$"+item?.age_60_price
+                              item?.same_for_all != "" ?  "US$"+item?.same_for_all : "US$"+item?.under_10_age_price +" – /US$"+item?.age_11_price
                             }
                             </Text>
                           </LinearGradient>

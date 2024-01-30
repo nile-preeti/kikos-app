@@ -147,15 +147,15 @@ const BookDetails = props => {
         responseJson.booked_events.forEach((date) => {
           notAvailableDatesObj[date.date] = { disabled: true, disableTouchEvent: true, selectedColor: '#4CBA08',dotColor: '#4CBA08',marked: false,selected: true, };
         });
-          console.log('the notAvailableDatesObj==>>', notAvailableDatesObj);
+          // console.log('the notAvailableDatesObj==>>', notAvailableDatesObj);
           setUnavailableDays(notAvailableDatesObj);
 
           const bookedDatesObj = {};
           responseJson.not_available.forEach((date) => {
-            console.log('the date==>>', date.date);
+            // console.log('the date==>>', date.date);
           bookedDatesObj[date.date] = {disabled: true, disableTouchEvent: true, selectedColor: '#9C9D9F',dotColor: '#9C9D9F',marked: false,selected: true,  };
         });
-        console.log('the bookedDatesObj==>>', bookedDatesObj);
+        // console.log('the bookedDatesObj==>>', bookedDatesObj);
         setavailableDays(bookedDatesObj);
           
       } else {
@@ -297,7 +297,26 @@ const BookDetails = props => {
             <Text style={[styles.forAllTxt, {marginTop: 2}]}>
               {tourdetails?.name}
             </Text>
-            <View
+            {
+              tourdetails?.same_for_all != "" ?
+              <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10,
+              }}>
+              <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                ${tourdetails?.same_for_all}
+              </Text>
+              <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                {' '}
+                Same for all
+              </Text>
+            </View>
+            :
+(
+  <>
+  <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -329,6 +348,10 @@ const BookDetails = props => {
                 Children Ages 10 & Under
               </Text>
             </View>
+  </>
+)
+            }
+            
             <Text
               style={[
                 styles.uploadTxt,
@@ -546,7 +569,7 @@ const BookDetails = props => {
                 borderTopLeftRadius: 30,
                 borderTopRightRadius: 30,
                 borderTopColor: COLORS.Primary_Blue,
-                borderTopWidth: 0,
+                borderTopWidth: 2,
               }}>
               <Text
                 style={[
@@ -756,7 +779,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   forAllTxt: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '400',
     lineHeight: 20,
     color: '#1F191C',

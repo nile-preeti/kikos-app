@@ -188,7 +188,11 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
       <CustomHeader
         title={'Book A Tour'}
         onBackPress={() => {
-          props.navigation.replace('HomeScreen');
+          props.navigation.goBack()
+        //   props.navigation.navigate('HomeStack', {
+        //     screen: 'BookDetails',
+        //     params: {},
+        // });
         }}
       />
       <ScrollView>
@@ -230,7 +234,7 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
               {tourdetails?.title}
               </Text>
               </View>
-              <View style={{width:'100%'}}>
+              <View style={{width:'90%'}}>
               <Text numberOfLines={2} style={[styles.forAllTxt, {color: '#8F93A0'}]}>
                 {tourdetails?.name}
               </Text>
@@ -307,7 +311,7 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
                   styles.forAllTxt,
                   {color: COLORS.Primary_Blue, fontWeight: '700', fontSize: 13},
                 ]}>
-                ${Totalamountadultfun(tourdetails?.age_11_price)}
+                ${Totalamountadultfun(tourdetails?.same_for_all != "" ? tourdetails?.same_for_all: tourdetails?.age_11_price)}
               </Text>
             </View>
 
@@ -425,7 +429,7 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
                   styles.forAllTxt,
                   {color: COLORS.Primary_Blue, fontWeight: '700', fontSize: 13},
                 ]}>
-                ${Totalamountseniorfun(tourdetails?.age_60_price)}
+                ${Totalamountseniorfun(tourdetails?.same_for_all != "" ? tourdetails?.same_for_all:tourdetails?.age_60_price)}
               </Text>
             </View>
             <View
@@ -541,7 +545,7 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
                   styles.forAllTxt,
                   {color: COLORS.Primary_Blue, fontWeight: '700', fontSize: 13},
                 ]}>
-                ${Totalamountkidsfun(tourdetails?.age_60_price)}
+                ${Totalamountkidsfun(tourdetails?.same_for_all != "" ? tourdetails?.same_for_all:tourdetails?.under_10_age_price)}
               </Text>
             </View>
             <View

@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   Modal,
 } from 'react-native';
-import React, {useState, Fragment, useCallback, useMemo, useRef} from 'react';
+import React, {useState, useEffect, useCallback, useMemo, useRef} from 'react';
 import CustomHeader from '../../components/CustomeHeader';
 import {dimensions} from '../../utility/Mycolors';
 import images from '../../global/images';
@@ -20,11 +20,24 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Calendar, LocaleConfig, CalendarUtils} from 'react-native-calendars';
 import {DASHDATA} from '../../redux/types';
+import {confirmed_tour, requestGetApi, requestPostApi} from '../../WebApi/Service';
+import Loader from '../../WebApi/Loader';
+import MyAlert from '../../components/MyAlert';
+import {useSelector, useDispatch} from 'react-redux';
 
 const ConfirmedTour = props => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user.user_details);
+  const [My_Alert, setMy_Alert] = useState(false);
+  const [alert_sms, setalert_sms] = useState('');
+  const [loading, setLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectButton, setSelectButton] = useState('showall');
   const [modalVisible, setModalVisible] = useState(false);
+  const [cancellationtext, setCancellationtext] = useState('');
+
+  const [Data, setDATA] = useState([]);
+  // const [Data1, setDATA1] = useState([]);
   const [selectedDates, setSelectedDates] = useState({});
   const [markedDates, setMarkedDates] = useState({});
   const data = [
@@ -41,53 +54,90 @@ const ConfirmedTour = props => {
       image: require('../../assets/images/largeimages/dummydetail.png'),
     },
   ];
-  const onViewableItemsChanged = useCallback(({viewableItems}) => {
-    if (viewableItems.length > 0) {
-      setCurrentIndex(viewableItems[0].index);
-    }
+
+  useEffect(() => {
+    // getConfirmedTour();
+    getConfirmedTourAccept()
   }, []);
 
-  const handleDayPress = day => {
-    // Check if the date is already marked
-    if (markedDates[day.dateString]) {
-      // Date is already marked, unmark it
-      const updatedMarkedDates = {...markedDates};
-      delete updatedMarkedDates[day.dateString];
-      setMarkedDates(updatedMarkedDates);
+  // const getConfirmedTour = async () => {
+  //   setLoading(true);
+  //   let formdata = new FormData();
+  //   formdata.append('status', '');
+  //   const {responseJson, err} = await requestGetApi(
+  //     confirmed_tour,
+  //     formdata,
+  //     'POST',
+  //     user.token,
+  //   );
+  //   setLoading(false);
+  //   // console.log('the getConfirmedTour==>>', responseJson.data);
+  //   if (err == null) {
+  //     if (responseJson.status == true) {
+  //       setDATA(responseJson.data);
+  //     } else {
+  //       setalert_sms(responseJson.message);
+  //       setMy_Alert(true);
+  //     }
+  //   } else {
+  //     setalert_sms(err);
+  //     setMy_Alert(true);
+  //   }
+  // };
+  const getConfirmedTourAccept = async (value) => {
+    console.log('==================================value==',value);
+    setDATA([]);
+   
+    setLoading(true);
+    let formdata = new FormData();
+    formdata.append('status', value != undefined ? value : "" );
+    console.log('==================formdata==================',formdata);
+    const {responseJson, err} = await requestPostApi(
+      confirmed_tour,
+      formdata,
+      'POST',
+      user.token,
+    );
+    setLoading(false);
+    console.log('the getConfirmedTourAccept/reject==>>', responseJson);
+    if (err == null) {
+      if (responseJson.status == true) {
+        setDATA(responseJson.data);
+      } else {
+        setalert_sms(responseJson.message);
+        setMy_Alert(true);
+      }
     } else {
-      // Date is not marked, mark it
-      setMarkedDates({
-        ...markedDates,
-        [day.dateString]: {
-          selected: true,
-          selectedColor: 'blue',
-          marked: true,
-          dotColor: 'blue',
-        },
-      });
+      setalert_sms(err);
+      setMy_Alert(true);
     }
   };
+
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.Primary_Blue}}>
-      <View style={{backgroundColor: '#EAEDF7'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7'}}>
+      <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <CustomHeader
-          title={'Confirmed Tour'}
+          title={'Booking Tour'}
           onBackPress={() => {
             props.navigation.goBack();
           }}
         />
+
         <View
           style={{
+            // flex:0.1,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
             width: '90%',
             marginHorizontal: 20,
             marginTop: 15,
+            marginBottom: 15,
           }}>
           <TouchableOpacity
             onPress={() => {
               setSelectButton('showall');
+              getConfirmedTourAccept()
             }}
             style={{
               justifyContent: 'center',
@@ -116,6 +166,7 @@ const ConfirmedTour = props => {
           <TouchableOpacity
             onPress={() => {
               setSelectButton('accepted');
+              getConfirmedTourAccept("1");
             }}
             style={{
               justifyContent: 'center',
@@ -144,6 +195,7 @@ const ConfirmedTour = props => {
           <TouchableOpacity
             onPress={() => {
               setSelectButton('rejected');
+              getConfirmedTourAccept("2")
             }}
             style={{
               justifyContent: 'center',
@@ -170,216 +222,1020 @@ const ConfirmedTour = props => {
             </Text>
           </TouchableOpacity>
         </View>
-<View style={{marginBottom:100,}}>
+        {
+          console.log("selectButton..........",selectButton)
+        }
+        {selectButton === 'showall' ? (
+          <>
+            {Data.length > 0 ? (
+              <View style={{justifyContent: 'center', flex: 1}}>
+                <FlatList
+                  data={Data}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={(item, index) => {
+                    // console.log("adahsgdjagdsj",item?.im);
+                    return (
+                      <TouchableOpacity
+                        // key={index}
+                        onPress={() => {
+                          props.navigation.navigate('ConfirmedTourDetails', {
+                            tourId: item.item?.id,
+                          });
+                        }}
+                        style={{
+                          alignSelf: 'center',
+                          alignItems: 'center',
+                          // marginTop: 15,
+                          marginBottom: 20,
+                          width: '90%',
+                          backgroundColor: '#fff',
+                          borderRadius: 10,
+                          shadowColor: '#000',
+                          shadowOffset: {width: 1, height: 1},
+                          shadowOpacity: 0.4,
+                          shadowRadius: 2,
+                          elevation: 3,
+                          padding: 7,
+                        }}>
+                        <View style={styles.bookingIdContainer}>
+                          <View style={{flexDirection: 'row'}}>
+                            <Text style={styles.bookingIdTxt}>Booking ID:</Text>
+                            <Text style={styles.bookingIdN}>
+                              {item.item?.boooking_id != null
+                                ? item.item?.boooking_id
+                                : 'not found'}
+                            </Text>
+                            {/* <Image
+                       source={images.document}
+                       style={{marginLeft: 7, marginTop: 3}}
+                     /> */}
+                          </View>
 
+                          <View
+                            style={{
+                              height: 26,
+                              width: 96,
+                              borderRadius: 50,
+                              flexDirection: 'row',
+                              borderColor:
+                              item.item?.status_id == '1'
+                              ? '#4CBA08'
+                              : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                              borderWidth: 1,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <View
+                              style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor:
+                                item.item?.status_id == '1'
+                                ? '#4CBA08'
+                                : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                                borderRadius: 100,
+                                height: 10,
+                                width: 10,
+                                marginRight: 10,
+                              }}
+                            />
+                            <Text
+                              style={{
+                                fontWeight: '500',
+                                fontSize: 12,
+                                color:
+                                item.item?.status_id == '1'
+                                ? '#4CBA08'
+                                : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                              }}>
+                              {item.item?.status}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={[styles.line, {marginTop: 18}]}></View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
 
-        <FlatList
-          data={DASHDATA}
-          keyExtractor={(item,index)=>index.toString()}
-          renderItem={(item, index) => {
-            return (
-              <TouchableOpacity
-              onPress={() => {props.navigation.navigate('ConfirmedTourDetails',{tourId:1})}}
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            marginTop: 15,
+                            width: '95%',
+                            //   backgroundColor: '#fff',
+                            //   borderRadius: 10,
+                            //   shadowColor: '#000',
+                            //   shadowOffset: {width: 1, height: 1},
+                            //   shadowOpacity: 0.4,
+                            //   shadowRadius: 2,
+                            //   elevation: 3,
+                            //   padding: 7,
+                          }}>
+                          <View>
+                            <Image
+                              style={{
+                                width: 80,
+                                height: 80,
+                                resizeMode: 'stretch',
+                                borderRadius: 10,
+                                // backgroundColor:'gray'
+                              }}
+                              // source={require('../../assets/images/largeimages/Rectangle9.png')}
+                              source={
+                                item?.item?.images != ''
+                                  ? {uri: `${item?.item?.images}`}
+                                  : require('../../assets/images/largeimages/Rectangle9.png')
+                              }
+                            />
+                          </View>
+
+                          <View style={{width: '80%', marginLeft: 10}}>
+                            <View style={{width: '90%'}}>
+                              <Text
+                                numberOfLines={1}
+                                style={[styles.uploadTxt, {fontWeight: '600'}]}>
+                                {item?.item?.tour_image}
+                                {item?.item?.tour_title}
+                              </Text>
+                            </View>
+
+                            <View style={{width: '100%'}}>
+                              <Text
+                                numberOfLines={2}
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {item.item?.description}
+                              </Text>
+                            </View>
+
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/calendar.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                Duration {item.item?.duration} Hours
+                              </Text>
+                            </View>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/clock.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                {item.item?.created_date}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* <View style={{width: '30%'}}></View> */}
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginTop: 15,
+                            width: '95%',
+                            // height:50,
+                            // flex:1
+                          }}>
+                          <View
+                            style={{marginLeft: 10, width: '40%', flex: 0.7}}>
+                            <Text
+                              style={[
+                                styles.uploadTxt,
+                                {fontWeight: '400', fontSize: 14},
+                              ]}>
+                              No of People
+                            </Text>
+                            <Text
+                              style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                              {item.item.no_of_person}
+                            </Text>
+                          </View>
+                          <View style={{marginLeft: 10, flex: 0.8}}>
+                            <Text
+                              style={[
+                                styles.uploadTxt,
+                                {fontWeight: '400', fontSize: 14},
+                              ]}>
+                              Selected Date:
+                            </Text>
+                            <View style={{width: '100%'}}>
+                              <Text
+                                numberOfLines={2}
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {item.item?.selectd_date != null
+                                  ? item.item?.selectd_date
+                                  : '--'}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View style={[styles.line, {marginTop: 18}]}></View>
+
+                        <View style={[styles.bookingIdContainer]}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Text style={styles.bookingIdTxt}>
+                              Amount Paid:
+                            </Text>
+                            <Text
+                              style={[
+                                styles.bookingIdN,
+                                {
+                                  color: '#3DA1E3',
+                                  fontWeight: '700',
+                                  fontSize: 18,
+                                },
+                              ]}>
+                              {' '}
+                              ${item.item?.total_amount}
+                            </Text>
+                          </View>
+
+                          <TouchableOpacity
+                            onPress={() => {
+                              setCancellationtext(
+                                item?.item?.cancellation_policy,
+                              );
+                              setModalVisible(true);
+                            }}
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              height: 35,
+                              width: 142,
+                              borderRadius: 50,
+                              backgroundColor: '#3DA1E3',
+                              shadowColor: '#000',
+                              shadowOffset: {width: 1, height: 1},
+                              shadowOpacity: 0.4,
+                              shadowRadius: 2,
+                              elevation: 3,
+                              padding: 7,
+                            }}>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#fff',
+                              }}>
+                              Cancellation Policy
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                        <View style={{height: 10}} />
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+            ) : (
+              <View
                 style={{
-                  alignSelf: 'center',
-                  alignItems: 'center',
-                  marginTop: 15,
-                  width: '90%',
-                  backgroundColor: '#fff',
-                  borderRadius: 10,
-                  shadowColor: '#000',
-                  shadowOffset: {width: 1, height: 1},
-                  shadowOpacity: 0.4,
-                  shadowRadius: 2,
-                  elevation: 3,
-                  padding: 7,
+                  marginTop: 40,
+                  width: '95%',
+                  justifyContent: 'center',
+                  marginHorizontal: 10,
                 }}>
-                <View style={styles.bookingIdContainer}>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text style={styles.bookingIdTxt}>Booking ID:</Text>
-                    <Text style={styles.bookingIdN}>8niudy834</Text>
-                    <Image
-                      source={images.document}
-                      style={{marginLeft: 7, marginTop: 3}}
-                    />
-                  </View>
-
-                  <View
-                    style={{
-                      height: 26,
-                      width: 96,
-                      borderRadius: 50,
-                      flexDirection: 'row',
-                      borderColor: '#4CBA08',
-                      borderWidth: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: '#4CBA08',
-                        borderRadius: 100,
-                        height: 10,
-                        width: 10,
-                        marginRight: 10,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        fontWeight: '500',
-                        fontSize: 12,
-                        color: '#4CBA08',
-                      }}>
-                      Accepted
-                    </Text>
-                  </View>
+                <View style={{height: 200, width: 200, alignSelf: 'center'}}>
+                  <Image
+                    resizeMode="stretch"
+                    source={images.nodatafound}
+                    style={{height: '100%', width: '100%', alignSelf: 'center'}}
+                  />
                 </View>
-                <View style={[styles.line, {marginTop: 18}]}></View>
-                <View
+                <Text
                   style={{
-                    flexDirection: 'row',
-
+                    color: '#000',
                     alignSelf: 'center',
-                    alignItems: 'center',
-                    marginTop: 15,
-                    width: '95%',
-                    //   backgroundColor: '#fff',
-                    //   borderRadius: 10,
-                    //   shadowColor: '#000',
-                    //   shadowOffset: {width: 1, height: 1},
-                    //   shadowOpacity: 0.4,
-                    //   shadowRadius: 2,
-                    //   elevation: 3,
-                    //   padding: 7,
+                    marginTop: 25,
+                    fontSize: 20,
+                    fontWeight: '600',
+                    textAlign: 'center',
                   }}>
-                  <View>
-                    <Image
-                      style={{
-                        width: 80,
-                        height: 80,
-                        resizeMode: 'stretch',
-                        borderRadius: 10,
-                      }}
-                      source={require('../../assets/images/largeimages/Rectangle9.png')}
-                    />
-                  </View>
-
-                  <View style={{marginLeft: 10}}>
-                    <Text style={[styles.uploadTxt, {fontWeight: '600'}]}>
-                      North Shore
-                    </Text>
-                    <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                      For All Ages! Great For Families!
-                    </Text>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Image
-                        style={{width: 12, height: 12, resizeMode: 'stretch'}}
-                        source={require('../../assets/images/Icons/calendar.png')}></Image>
-                      <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                        {' '}
-                        Duration 8 Hours
-                      </Text>
-                    </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Image
-                        style={{width: 12, height: 12, resizeMode: 'stretch'}}
-                        source={require('../../assets/images/Icons/clock.png')}></Image>
-                      <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                        {' '}
-                        19 October, 2023 Saturday
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={{width: '30%'}}></View>
-                </View>
-                <View
+                  No Data Found
+                </Text>
+                <Text
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginTop: 15,
-                    width: '95%',
+                    color: '#000',
+                    alignSelf: 'center',
+                    marginTop: 25,
+                    fontSize: 15,
+                    fontWeight: '400',
+                    textAlign: 'center',
                   }}>
-                  <View style={{marginLeft: 10}}>
-                    <Text
-                      style={[
-                        styles.uploadTxt,
-                        {fontWeight: '400', fontSize: 14},
-                      ]}>
-                      No of People
-                    </Text>
-                    <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                      04
-                    </Text>
-                  </View>
-                  <View style={{marginLeft: 10}}>
-                    <Text
-                      style={[
-                        styles.uploadTxt,
-                        {fontWeight: '400', fontSize: 14},
-                      ]}>
-                      Selected Date:
-                    </Text>
-                    <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                      19 October, 2023 Saturday
-                    </Text>
-                  </View>
-                </View>
-                <View style={[styles.line, {marginTop: 18,}]}></View>
-                
-                <View style={[styles.bookingIdContainer]}>
-                    
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={styles.bookingIdTxt}>Amount Paid:</Text>
-                    <Text
-                      style={[
-                        styles.bookingIdN,
-                        {color: '#3DA1E3', fontWeight: '700', fontSize: 18},
-                      ]}>
-                      {' '}
-                      $559.00
-                    </Text>
-                  </View>
+                  Ullamco tempor adipisicing et voluptate duis sit esse aliqua
+                  esse ex.
+                </Text>
+                {/* <CustomButton
+             borderColor={'#83CDFD'}
+             title={'Refresh'}
+             onPress={() => {
+               AsyncStorage.clear();
+               dispatch(onLogoutUser());
+             }}
+             backgroundColor={COLORS.Primary_Blue}
+           /> */}
+              </View>
+            )}
+          </>
+        ) : null}
+         {selectButton === 'accepted' ? (
+          <>
+            {Data.length > 0 ? (
+              <View style={{justifyContent: 'center', flex: 1}}>
+                <FlatList
+                  data={Data}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={(item, index) => {
+                    // console.log("adahsgdjagdsj",item?.im);
+                    return (
+                      <TouchableOpacity
+                        // key={index}
+                        onPress={() => {
+                          props.navigation.navigate('ConfirmedTourDetails', {
+                            tourId: item.item?.id,
+                          });
+                        }}
+                        style={{
+                          alignSelf: 'center',
+                          alignItems: 'center',
+                          // marginTop: 15,
+                          marginBottom: 20,
+                          width: '90%',
+                          backgroundColor: '#fff',
+                          borderRadius: 10,
+                          shadowColor: '#000',
+                          shadowOffset: {width: 1, height: 1},
+                          shadowOpacity: 0.4,
+                          shadowRadius: 2,
+                          elevation: 3,
+                          padding: 7,
+                        }}>
+                        <View style={styles.bookingIdContainer}>
+                          <View style={{flexDirection: 'row'}}>
+                            <Text style={styles.bookingIdTxt}>Booking ID:</Text>
+                            <Text style={styles.bookingIdN}>
+                              {item.item?.boooking_id != null
+                                ? item.item?.boooking_id
+                                : 'not found'}
+                            </Text>
+                            {/* <Image
+                       source={images.document}
+                       style={{marginLeft: 7, marginTop: 3}}
+                     /> */}
+                          </View>
 
-                  <TouchableOpacity
-                    onPress={() => {}}
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: 35,
-                      width: 142,
-                      borderRadius: 50,
-                      backgroundColor: '#3DA1E3',
-                      shadowColor: '#000',
-                      shadowOffset: {width: 1, height: 1},
-                      shadowOpacity: 0.4,
-                      shadowRadius: 2,
-                      elevation: 3,
-                      padding: 7,
-                    }}>
-                    <Text
-                      style={{
-                        fontWeight: '400',
-                        fontSize: 12,
-                        color: '#fff',
-                      }}>
-                      Cancellation Policy
-                    </Text>
-                  </TouchableOpacity>
+                          <View
+                            style={{
+                              height: 26,
+                              width: 96,
+                              borderRadius: 50,
+                              flexDirection: 'row',
+                              borderColor:
+                                item.item?.status_id == '1'
+                                  ? '#4CBA08'
+                                  : '#9C9D9F',
+                              borderWidth: 1,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <View
+                              style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor:
+                                  item.item?.status_id == '1'
+                                    ? '#4CBA08'
+                                    : '#9C9D9F',
+                                borderRadius: 100,
+                                height: 10,
+                                width: 10,
+                                marginRight: 10,
+                              }}
+                            />
+                            <Text
+                              style={{
+                                fontWeight: '500',
+                                fontSize: 12,
+                                color:
+                                  item.item?.status_id == '1'
+                                    ? '#4CBA08'
+                                    : '#9C9D9F',
+                              }}>
+                              {item.item?.status}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={[styles.line, {marginTop: 18}]}></View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            marginTop: 15,
+                            width: '95%',
+                            //   backgroundColor: '#fff',
+                            //   borderRadius: 10,
+                            //   shadowColor: '#000',
+                            //   shadowOffset: {width: 1, height: 1},
+                            //   shadowOpacity: 0.4,
+                            //   shadowRadius: 2,
+                            //   elevation: 3,
+                            //   padding: 7,
+                          }}>
+                          <View>
+                            <Image
+                              style={{
+                                width: 80,
+                                height: 80,
+                                resizeMode: 'stretch',
+                                borderRadius: 10,
+                                // backgroundColor:'gray'
+                              }}
+                              // source={require('../../assets/images/largeimages/Rectangle9.png')}
+                              source={
+                                item?.item?.images != ''
+                                  ? {uri: `${item?.item?.images}`}
+                                  : require('../../assets/images/largeimages/Rectangle9.png')
+                              }
+                            />
+                          </View>
+
+                          <View style={{width: '80%', marginLeft: 10}}>
+                            <View style={{width: '90%'}}>
+                              <Text
+                                numberOfLines={1}
+                                style={[styles.uploadTxt, {fontWeight: '600'}]}>
+                                {item?.item?.tour_image}
+                                {item?.item?.tour_title}
+                              </Text>
+                            </View>
+
+                            <View style={{width: '100%'}}>
+                              <Text
+                                numberOfLines={2}
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {item.item?.description}
+                              </Text>
+                            </View>
+
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/calendar.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                Duration {item.item?.duration} Hours
+                              </Text>
+                            </View>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/clock.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                {item.item?.created_date}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* <View style={{width: '30%'}}></View> */}
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginTop: 15,
+                            width: '95%',
+                            // height:50,
+                            // flex:1
+                          }}>
+                          <View
+                            style={{marginLeft: 10, width: '40%', flex: 0.7}}>
+                            <Text
+                              style={[
+                                styles.uploadTxt,
+                                {fontWeight: '400', fontSize: 14},
+                              ]}>
+                              No of People
+                            </Text>
+                            <Text
+                              style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                              {item.item.no_of_person}
+                            </Text>
+                          </View>
+                          <View style={{marginLeft: 10, flex: 0.8}}>
+                            <Text
+                              style={[
+                                styles.uploadTxt,
+                                {fontWeight: '400', fontSize: 14},
+                              ]}>
+                              Selected Date:
+                            </Text>
+                            <View style={{width: '100%'}}>
+                              <Text
+                                numberOfLines={2}
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {item.item?.selectd_date != null
+                                  ? item.item?.selectd_date
+                                  : '--'}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View style={[styles.line, {marginTop: 18}]}></View>
+
+                        <View style={[styles.bookingIdContainer]}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Text style={styles.bookingIdTxt}>
+                              Amount Paid:
+                            </Text>
+                            <Text
+                              style={[
+                                styles.bookingIdN,
+                                {
+                                  color: '#3DA1E3',
+                                  fontWeight: '700',
+                                  fontSize: 18,
+                                },
+                              ]}>
+                              {' '}
+                              ${item.item?.total_amount}
+                            </Text>
+                          </View>
+
+                          <TouchableOpacity
+                            onPress={() => {
+                              setCancellationtext(
+                                item?.item?.cancellation_policy,
+                              );
+                              setModalVisible(true);
+                            }}
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              height: 35,
+                              width: 142,
+                              borderRadius: 50,
+                              backgroundColor: '#3DA1E3',
+                              shadowColor: '#000',
+                              shadowOffset: {width: 1, height: 1},
+                              shadowOpacity: 0.4,
+                              shadowRadius: 2,
+                              elevation: 3,
+                              padding: 7,
+                            }}>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#fff',
+                              }}>
+                              Cancellation Policy
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                        <View style={{height: 10}} />
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+            ) : (
+              <View
+                style={{
+                  marginTop: 40,
+                  width: '95%',
+                  justifyContent: 'center',
+                  marginHorizontal: 10,
+                }}>
+                <View style={{height: 200, width: 200, alignSelf: 'center'}}>
+                  <Image
+                    resizeMode="stretch"
+                    source={images.nodatafound}
+                    style={{height: '100%', width: '100%', alignSelf: 'center'}}
+                  />
                 </View>
-                <View style={{height: 10}} />
-              </TouchableOpacity>
-            );
-          }}
-        />
-        </View>
+                <Text
+                  style={{
+                    color: '#000',
+                    alignSelf: 'center',
+                    marginTop: 25,
+                    fontSize: 20,
+                    fontWeight: '600',
+                    textAlign: 'center',
+                  }}>
+                  No Data Found
+                </Text>
+                <Text
+                  style={{
+                    color: '#000',
+                    alignSelf: 'center',
+                    marginTop: 25,
+                    fontSize: 15,
+                    fontWeight: '400',
+                    textAlign: 'center',
+                  }}>
+                  Ullamco tempor adipisicing et voluptate duis sit esse aliqua
+                  esse ex.
+                </Text>
+                {/* <CustomButton
+             borderColor={'#83CDFD'}
+             title={'Refresh'}
+             onPress={() => {
+               AsyncStorage.clear();
+               dispatch(onLogoutUser());
+             }}
+             backgroundColor={COLORS.Primary_Blue}
+           /> */}
+              </View>
+            )}
+          </>
+        ) : null}
+         {selectButton === 'rejected' ? (
+          <>
+            {Data.length > 0 ? (
+              <View style={{justifyContent: 'center', flex: 1}}>
+                <FlatList
+                  data={Data}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={(item, index) => {
+                    // console.log("adahsgdjagdsj",item?.im);
+                    return (
+                      <TouchableOpacity
+                        // key={index}
+                        onPress={() => {
+                          props.navigation.navigate('ConfirmedTourDetails', {
+                            tourId: item.item?.id,
+                          });
+                        }}
+                        style={{
+                          alignSelf: 'center',
+                          alignItems: 'center',
+                          // marginTop: 15,
+                          marginBottom: 20,
+                          width: '90%',
+                          backgroundColor: '#fff',
+                          borderRadius: 10,
+                          shadowColor: '#000',
+                          shadowOffset: {width: 1, height: 1},
+                          shadowOpacity: 0.4,
+                          shadowRadius: 2,
+                          elevation: 3,
+                          padding: 7,
+                        }}>
+                        <View style={styles.bookingIdContainer}>
+                          <View style={{flexDirection: 'row'}}>
+                            <Text style={styles.bookingIdTxt}>Booking ID:</Text>
+                            <Text style={styles.bookingIdN}>
+                              {item.item?.boooking_id != null
+                                ? item.item?.boooking_id
+                                : 'not found'}
+                            </Text>
+                            {/* <Image
+                       source={images.document}
+                       style={{marginLeft: 7, marginTop: 3}}
+                     /> */}
+                          </View>
+
+                          <View
+                            style={{
+                              height: 26,
+                              width: 96,
+                              borderRadius: 50,
+                              flexDirection: 'row',
+                              borderColor:
+                                item.item?.status_id == '1'
+                                  ? '#4CBA08'
+                                  : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                              borderWidth: 1,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <View
+                              style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor:
+                                item.item?.status_id == '1'
+                                ? '#4CBA08'
+                                : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                                borderRadius: 100,
+                                height: 10,
+                                width: 10,
+                                marginRight: 10,
+                              }}
+                            />
+                            <Text
+                              style={{
+                                fontWeight: '500',
+                                fontSize: 12,
+                                color:
+                                item.item?.status_id == '1'
+                                ? '#4CBA08'
+                                : item?.item?.status_id == '2' ? '#FF0000' : '#9C9D9F',
+                              }}>
+                              {item.item?.status}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={[styles.line, {marginTop: 18}]}></View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            marginTop: 15,
+                            width: '95%',
+                            //   backgroundColor: '#fff',
+                            //   borderRadius: 10,
+                            //   shadowColor: '#000',
+                            //   shadowOffset: {width: 1, height: 1},
+                            //   shadowOpacity: 0.4,
+                            //   shadowRadius: 2,
+                            //   elevation: 3,
+                            //   padding: 7,
+                          }}>
+                          <View>
+                            <Image
+                              style={{
+                                width: 80,
+                                height: 80,
+                                resizeMode: 'stretch',
+                                borderRadius: 10,
+                                // backgroundColor:'gray'
+                              }}
+                              // source={require('../../assets/images/largeimages/Rectangle9.png')}
+                              source={
+                                item?.item?.images != ''
+                                  ? {uri: `${item?.item?.images}`}
+                                  : require('../../assets/images/largeimages/Rectangle9.png')
+                              }
+                            />
+                          </View>
+
+                          <View style={{width: '80%', marginLeft: 10}}>
+                            <View style={{width: '90%'}}>
+                              <Text
+                                numberOfLines={1}
+                                style={[styles.uploadTxt, {fontWeight: '600'}]}>
+                                {item?.item?.tour_image}
+                                {item?.item?.tour_title}
+                              </Text>
+                            </View>
+
+                            <View style={{width: '100%'}}>
+                              <Text
+                                numberOfLines={2}
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {item.item?.description}
+                              </Text>
+                            </View>
+
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/calendar.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                Duration {item.item?.duration} Hours
+                              </Text>
+                            </View>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  resizeMode: 'stretch',
+                                }}
+                                source={require('../../assets/images/Icons/clock.png')}></Image>
+                              <Text
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {' '}
+                                {item.item?.created_date}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* <View style={{width: '30%'}}></View> */}
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginTop: 15,
+                            width: '95%',
+                            // height:50,
+                            // flex:1
+                          }}>
+                          <View
+                            style={{marginLeft: 10, width: '40%', flex: 0.7}}>
+                            <Text
+                              style={[
+                                styles.uploadTxt,
+                                {fontWeight: '400', fontSize: 14},
+                              ]}>
+                              No of People
+                            </Text>
+                            <Text
+                              style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                              {item.item.no_of_person}
+                            </Text>
+                          </View>
+                          <View style={{marginLeft: 10, flex: 0.8}}>
+                            <Text
+                              style={[
+                                styles.uploadTxt,
+                                {fontWeight: '400', fontSize: 14},
+                              ]}>
+                              Selected Date:
+                            </Text>
+                            <View style={{width: '100%'}}>
+                              <Text
+                                numberOfLines={2}
+                                style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                                {item.item?.selectd_date != null
+                                  ? item.item?.selectd_date
+                                  : '--'}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View style={[styles.line, {marginTop: 18}]}></View>
+
+                        <View style={[styles.bookingIdContainer]}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Text style={styles.bookingIdTxt}>
+                              Amount Paid:
+                            </Text>
+                            <Text
+                              style={[
+                                styles.bookingIdN,
+                                {
+                                  color: '#3DA1E3',
+                                  fontWeight: '700',
+                                  fontSize: 18,
+                                },
+                              ]}>
+                              {' '}
+                              ${item.item?.total_amount}
+                            </Text>
+                          </View>
+
+                          <TouchableOpacity
+                            onPress={() => {
+                              setCancellationtext(
+                                item?.item?.cancellation_policy,
+                              );
+                              setModalVisible(true);
+                            }}
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              height: 35,
+                              width: 142,
+                              borderRadius: 50,
+                              backgroundColor: '#3DA1E3',
+                              shadowColor: '#000',
+                              shadowOffset: {width: 1, height: 1},
+                              shadowOpacity: 0.4,
+                              shadowRadius: 2,
+                              elevation: 3,
+                              padding: 7,
+                            }}>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#fff',
+                              }}>
+                              Cancellation Policy
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                        <View style={{height: 10}} />
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+            ) : (
+              <View
+                style={{
+                  marginTop: 40,
+                  width: '95%',
+                  justifyContent: 'center',
+                  marginHorizontal: 10,
+                }}>
+                <View style={{height: 200, width: 200, alignSelf: 'center'}}>
+                  <Image
+                    resizeMode="stretch"
+                    source={images.nodatafound}
+                    style={{height: '100%', width: '100%', alignSelf: 'center'}}
+                  />
+                </View>
+                <Text
+                  style={{
+                    color: '#000',
+                    alignSelf: 'center',
+                    marginTop: 25,
+                    fontSize: 20,
+                    fontWeight: '600',
+                    textAlign: 'center',
+                  }}>
+                  No Data Found
+                </Text>
+                <Text
+                  style={{
+                    color: '#000',
+                    alignSelf: 'center',
+                    marginTop: 25,
+                    fontSize: 15,
+                    fontWeight: '400',
+                    textAlign: 'center',
+                  }}>
+                  Ullamco tempor adipisicing et voluptate duis sit esse aliqua
+                  esse ex.
+                </Text>
+                {/* <CustomButton
+             borderColor={'#83CDFD'}
+             title={'Refresh'}
+             onPress={() => {
+               AsyncStorage.clear();
+               dispatch(onLogoutUser());
+             }}
+             backgroundColor={COLORS.Primary_Blue}
+           /> */}
+              </View>
+            )}
+          </>
+        ) : null}
       </View>
       <Modal
         transparent={true}
@@ -395,7 +1251,7 @@ const ConfirmedTour = props => {
           }}>
           <View
             style={{
-              height: (dimensions.SCREEN_HEIGHT * 35) / 100,
+              height: 'auto',
               width: dimensions.SCREEN_WIDTH,
               backgroundColor: '#FBFBFB',
               position: 'absolute',
@@ -429,27 +1285,32 @@ const ConfirmedTour = props => {
                     textAlign: 'center',
                   },
                 ]}>
-                Customers will receive a full refund or credit with 24 hours
-                notice of cancellation. Customers will also receive a full
-                refund or credit in case of operator cancellation due to weather
-                or other unforeseen circumstances. Contact us by phone to cancel
-                or inquire about a cancellation. No- shows will be charged the
-                full price.
+                {cancellationtext}
               </Text>
             </View>
 
             <CustomButton
-            borderColor={'#83CDFD'}
+              borderColor={'#83CDFD'}
               txtStyle={{color: '#fff', fontSize: 16, fontWeight: '400'}}
               backgroundColor={COLORS.Primary_Blue}
               title={'Close'}
               onPress={() => {
                 setModalVisible(false);
+                setCancellationtext('');
               }}
             />
           </View>
         </View>
       </Modal>
+      {My_Alert ? (
+        <MyAlert
+          sms={alert_sms}
+          okPress={() => {
+            setMy_Alert(false);
+          }}
+        />
+      ) : null}
+      {loading ? <Loader /> : null}
     </SafeAreaView>
   );
 };
@@ -537,14 +1398,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 10,
-  },
-  whiteCircle: {
-    height: 30,
-    width: 30,
-    borderRadius: 30,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   countTxt: {
     fontSize: 16,
