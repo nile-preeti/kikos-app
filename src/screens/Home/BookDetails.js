@@ -348,7 +348,7 @@ const BookDetails = props => {
               />
               <Text style={[styles.uploadTxt, {fontWeight: '700'}]}>
                 {' '}
-                About me
+                Full description
               </Text>
             </View>
             <View
