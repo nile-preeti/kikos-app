@@ -190,7 +190,7 @@ const LoginScreen = props => {
               onChangeText={txt => {
                 setEmail(txt);
               }}
-              placeholder={'Enter Your Email ID'}
+              placeholder={'Enter Your Email ID*'}
             />
           </View>
 
@@ -204,7 +204,7 @@ const LoginScreen = props => {
               onChangeText={txt => {
                 setPass(txt);
               }}
-              placeholder={'Password'}
+              placeholder={'Password*'}
               secureTextEntry={myeye}
               rightView={
                 <TouchableOpacity

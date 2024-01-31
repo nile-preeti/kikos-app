@@ -53,7 +53,7 @@ const BookTaxiScreen = props => {
       get_tax_booking_list,
       '',
       'GET',
-      user.token,
+      user.userid != undefined ? user.token : '',
     );
     setLoading(false);
     console.log('the getBookTaxi==>>', responseJson);
@@ -102,7 +102,7 @@ const BookTaxiScreen = props => {
           width: dimensions.SCREEN_WIDTH * 1,
           // marginTop:-40,flex:1
         }}>
-        {user.userid != undefined ? (
+     
           <View style={{justifyContent:'center',alignItems:'center',width: dimensions.SCREEN_WIDTH * 1,marginTop:datalist.length > 0 ? 60 : -80,}}>
             <View style={[styles.calCantainer, {marginTop: -10}]}>
               <View style={styles.container}>
@@ -336,8 +336,8 @@ const BookTaxiScreen = props => {
               </>
             )}
           </View>
-        ) : (
-          <View style={{marginTop: 40,width:'90%'}}>
+         
+          {/* <View style={{marginTop: 40,width:'90%'}}>
             <View style={{height: 350, width: 350, alignSelf: 'center'}}>
               <Image
                 resizeMode="stretch"
@@ -366,7 +366,7 @@ const BookTaxiScreen = props => {
             backgroundColor={COLORS.Primary_Blue}
           />
           </View>
-        )}
+       */}
       </View>
 
       {My_Alert ? (

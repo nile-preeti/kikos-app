@@ -139,7 +139,7 @@ const SetNewPass = (props) => {
             onChangeText={txt => {
               setPass(txt);
             }}
-            placeholder={'New Password'}
+            placeholder={'New Password*'}
             secureTextEntry={myeye}
             rightView={
               <TouchableOpacity
@@ -164,7 +164,7 @@ const SetNewPass = (props) => {
             onChangeText={txt => {
               setcPass(txt);
             }}
-            placeholder={'Confirm New Password'}
+            placeholder={'Confirm New Password*'}
             secureTextEntry={myeye1}
             rightView={
               <TouchableOpacity

@@ -225,7 +225,8 @@ const Otp = props => {
             fontSize: 14,
             fontWeight: '400',
           }}>
-          Check your email we have sent you a verification code on {viewOtp}
+          Check your email we have sent you a verification code on
+           {/* {viewOtp} */}
         </Text>
         </View>
        
@@ -238,7 +239,7 @@ const Otp = props => {
             fontSize: 14,
             fontWeight: '400',
             alignSelf: 'center',
-            marginTop: 40,
+            marginTop: 30,
           }}>
           {email}
         </Text>
@@ -261,6 +262,8 @@ const Otp = props => {
           onCodeChanged={code => {
             setState(code);
           }}
+          placeholderCharacter={'*'}
+          placeholderTextColor={'#CECECE'}
           autoFocusOnLoad
           codeInputFieldStyle={styles.underlineStyleBase}
           codeInputHighlightStyle={styles.underlineStyleHighLighted}

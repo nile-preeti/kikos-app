@@ -197,7 +197,7 @@ const RequestAFreeCallback = props => {
               onChangeText={txt => {
                 setFullName(txt);
               }}
-              placeholder={'Full Name'}
+              placeholder={'Full Name*'}
             />
           </View>
           {/* {console.log('MOBILENO>', mobile)} */}
@@ -211,7 +211,7 @@ const RequestAFreeCallback = props => {
             <MaskInput
               value={mobile}
               keyboardType="phone-pad"
-              placeholder="Phone Number"
+              placeholder="Phone Number*"
               placeholderTextColor={'#CECECE'}
               style={{color: '#000', marginLeft: 15}}
               onChangeText={(masked, unmasked) => {
@@ -331,7 +331,7 @@ const RequestAFreeCallback = props => {
               }}
               theme="LIGHT"
               // backgroundColor="white"
-              placeholder="Select Time Zone"
+              placeholder="Select Time Zone*"
               placeholderTextColor={'#B2B7B9'}
               containerStyle={{height: 50, paddingLeft: 2}}
               dropDownDirection="BOTTOM"
@@ -484,6 +484,10 @@ const RequestAFreeCallback = props => {
                         console.log(event);
                       }}
                     />
+                     <Text
+                      style={{fontSize: 15, color: '#000', left: 15}}
+                      >Select Date*
+                    </Text>
                   </View>
                 ) : (
                   <TouchableOpacity
@@ -501,7 +505,7 @@ const RequestAFreeCallback = props => {
                       onPress={() => {
                         setshowda(true);
                       }}>
-                      {date ? moment(date).format('YYYY-MM-DD') : 'Select Date'}
+                      {date ? moment(date).format('YYYY-MM-DD') : 'Select Date*'}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -576,7 +580,7 @@ const RequestAFreeCallback = props => {
                     ]}
                     date={orderTime}
                     mode="time"
-                    placeholder={'Select Time'}
+                    placeholder={'Select Time*'}
                     confirmBtnText="Confirm"
                     cancelBtnText="Cancel"
                     onDateChange={date => {
@@ -604,6 +608,10 @@ const RequestAFreeCallback = props => {
                         );
                       }}
                     />
+                    <Text
+                      style={{fontSize: 14, color: '#000', left: 15}}
+                      >Select Time*
+                    </Text>
                   </View>
                 ) : (
                   <TouchableOpacity
@@ -621,7 +629,7 @@ const RequestAFreeCallback = props => {
                       onPress={() => {
                         setshowdatime(true);
                       }}>
-                      {orderTime ? orderTime.slice(0, 5) : 'Select Time'}
+                      {orderTime ? orderTime.slice(0, 5) : 'Select Time*'}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -654,7 +662,7 @@ const RequestAFreeCallback = props => {
               textAlignVertical="top"
               onChangeText={txt => setAddNote(txt)}
               placeholderTextColor="gray"
-              placeholder="Add Note"
+              placeholder="Add Note*"
               style={styles.textInput}
             />
           </View>

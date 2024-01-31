@@ -21,6 +21,7 @@ import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
 import {
   get_book_tour,
+  requestGetApi,
   requestPostApi,
   tour_details,
 } from '../../WebApi/Service';
@@ -90,11 +91,11 @@ const BookTour = props => {
   const GetBookTourApi = async () => {
     setLoading(true);
 
-    const {responseJson, err} = await requestPostApi(
+    const {responseJson, err} = await requestGetApi(
       get_book_tour,
       '',
       'GET',
-      '',
+      user.userid != undefined ? user.token : '',
     );
     setLoading(false);
     console.log('the res=PostTourDetails=>>', responseJson);
@@ -465,7 +466,7 @@ const BookTour = props => {
               marginHorizontal: 10,
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginTop: 10,
+              marginTop: 15,
               flex: 1,
             }}>
             <Text style={styles.price}>Must try</Text>
@@ -632,8 +633,8 @@ const BookTour = props => {
                                   justifyContent: 'space-between',
                                   alignItems: 'center',
                                 }}>
-                                <View style={{width: '70%'}}>
-                                  <Text
+                                <View style={{width: '100%'}}>
+                                  <Text numberOfLines={3}
                                     style={{
                                       backgroundColor: 'transparent',
                                       color: '#FFFFFF',
@@ -651,7 +652,7 @@ const BookTour = props => {
                                       fontSize: 13,
                                       lineHeight: 18,
                                     }}>
-                                   *Price Per Person
+                                   {item?.name}
                                   </Text>
                                 </View>
 

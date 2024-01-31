@@ -175,7 +175,7 @@ const ForgotPass = props => {
             onChangeText={txt => {
               setEmail(txt);
             }}
-            placeholder={'Enter Your Email ID'}
+            placeholder={'Enter Your Email ID*'}
           />
         </View>
 

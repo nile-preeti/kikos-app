@@ -79,9 +79,10 @@ const BookTaxi = props => {
   }, []);
   // console.log('.........',Object.keys(markedDates)[0]);
   const PostBookingTaxi = async () => {
+    setpopup(true);
     console.log('.........',orderTime);
     if (Object.keys(markedDates).length == 0) {
-      setalert_sms('Please Select Booking Taxi Date');
+      setalert_sms('Please Select Booking Taxi Date*');
       setMy_Alert(true);
     } else if (orderTime == '' || orderTime.trim().length == 0) {
       setalert_sms('Please Select Time');
@@ -282,7 +283,7 @@ const BookTaxi = props => {
                   ]}
                   date={orderTime}
                   mode="time"
-                  placeholder={'Select Time'}
+                  placeholder={'Select Time*'}
                   confirmBtnText="Confirm"
                   cancelBtnText="Cancel"
                   onDateChange={date => {
@@ -291,11 +292,19 @@ const BookTaxi = props => {
                   }}
                 />
               ) : showdatime ? (
-                <View>
+                <View style={{width: '100%',
+                height: 55,
+                justifyContent: 'center',
+
+                borderColor: 'transparent',
+                zIndex: -999,
+                borderRadius: 5,}}>
                   <DateTimePicker
                     value={new Date()}
                     mode="time"
                     is24Hour={true}
+                    placeholder={'Select Time*'}
+                    placeholderTextColor={COLORS.Primary_Grey}
                     //   display="default"
                     display="spinner"
                     onChange={(event, stime) => {
@@ -310,6 +319,10 @@ const BookTaxi = props => {
                       );
                     }}
                   />
+                   <Text
+                    style={{fontSize: 14, color: '#000', left: 15}}
+                    >Select Time*
+                  </Text>
                 </View>
               ) : (
                 <TouchableOpacity
@@ -327,11 +340,14 @@ const BookTaxi = props => {
                     onPress={() => {
                       setshowdatime(true);
                     }}>
-                    {orderTime ? orderTime.slice(0, 5) : 'Select Time'}
+                    {orderTime !=''  ? orderTime.slice(0, 5) : 'Select Time*'}
                   </Text>
                 </TouchableOpacity>
               )}
             </View>
+            {
+              console.log("showdatime////////",orderTime)
+            }
             <TouchableOpacity
               onPress={() => {
                 setshowdatime(true);
@@ -352,7 +368,7 @@ const BookTaxi = props => {
               onChangeText={txt => {
                 setFullName(txt);
               }}
-              placeholder={'Full Name'}
+              placeholder={'Full Name*'}
             />
           </View>
           {/* {console.log('MOBILENO>', mobile)} */}
@@ -407,7 +423,7 @@ const BookTaxi = props => {
             <MaskInput
               value={mobile}
               keyboardType="phone-pad"
-              placeholder="Phone Number"
+              placeholder="Phone Number*"
               placeholderTextColor={'#CECECE'}
               style={{color: '#000', marginLeft: 15}}
               onChangeText={(masked, unmasked) => {
@@ -486,7 +502,7 @@ const BookTaxi = props => {
               onChangeText={txt => {
                 setHotelName(txt);
               }}
-              placeholder={'Hotel Name'}
+              placeholder={'Hotel Name*'}
             />
           </View>
           <View style={{marginTop: 13}}>
@@ -494,7 +510,7 @@ const BookTaxi = props => {
               onChangeText={txt => {
                 setPickUpLoc(txt);
               }}
-              placeholder={'Pickup Location'}
+              placeholder={'Pickup Location*'}
             />
           </View>
           <View style={{marginTop: 13}}>
@@ -502,7 +518,7 @@ const BookTaxi = props => {
               onChangeText={txt => {
                 setDropLoc(txt);
               }}
-              placeholder={'Drop off Location'}
+              placeholder={'Drop off Location*'}
             />
           </View>
 

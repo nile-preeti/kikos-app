@@ -12,7 +12,8 @@
     "androidReleasewihoutverbose": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "removeAndroidDrwable": "rm -rf ./android/app/src/main/res/drawable-*",
     "removeAndroidRaw": "rm -rf ./android/app/src/main/res/raw",
-    "testingbuildandroid": "./gradlew assembleRelease"
+    "testingbuildandroid": "./gradlew assembleRelease",
+    "testingbuildDebugandroid": "./gradlew assembleDebug"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",

@@ -103,7 +103,7 @@ const SignUpScreen = props => {
   const [myeye, setmyeye] = useState(true);
   const [myeye1, setmyeye1] = useState(true);
   const [cpass, setcpass] = useState('');
-const[checkOtpValid,setCheckOtpValid]=useState(false);
+  const [checkOtpValid, setCheckOtpValid] = useState(false);
 
   const [value, setValue] = useState('');
   const [formattedValue, setFormattedValue] = useState('');
@@ -168,7 +168,6 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
       let formdata = new FormData();
       formdata.append('email', email);
 
-      
       const {responseJson, err} = await requestPostApi(
         send_otp,
         formdata,
@@ -187,11 +186,10 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
           setalert_sms(responseJson.message);
           setMy_Alert(true);
         }
-      } else if(err == null) {
+      } else if (err == null) {
         setalert_sms(err);
         setMy_Alert(true);
-      }
-      else {
+      } else {
         setalert_sms(err);
         setMy_Alert(true);
       }
@@ -231,7 +229,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
           setalert_sms(responseJson.message);
           setMy_Alert(true);
         }
-      } else if(err == null) {
+      } else if (err == null) {
         setModalVisibleSendOtp(false);
         setState('');
         setalert_sms(err);
@@ -240,10 +238,8 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
     }
   };
 
-  
-
   const SignupPressed = async () => {
-    // setpopup(true);
+    setpopup(true);
     var EmailReg =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -259,11 +255,10 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
     } else if (mobile == '' || mobile.trim().length == 0) {
       setalert_sms('Please Enter Phone Number');
       setMy_Alert(true);
-    }else if (mobile.trim().length < 10) {
+    } else if (mobile.trim().length < 10) {
       setalert_sms('Please Enter Valid Phone Number');
       setMy_Alert(true);
-    }
-     else if (pass == '' || pass.trim().length == 0) {
+    } else if (pass == '' || pass.trim().length == 0) {
       setalert_sms('Please Enter Password');
       setMy_Alert(true);
     } else if (pass.trim().length < 8) {
@@ -278,9 +273,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
     } else if (pass != cpass) {
       setalert_sms('Password And Confirm Password should be same');
       setMy_Alert(true);
-    }
-    
-    else {
+    } else {
       setLoading(true);
       let formdata = new FormData();
       formdata.append('fullname', name);
@@ -303,15 +296,14 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
         if (responseJson?.status == true) {
           setpopup(true);
           // dataStore(responseJson.data);
-          
+
           // console.log("CREATED PROFILE..........!!!!",responseJson);
-          
         } else {
           console.log('Error in signup', responseJson.message);
           setalert_sms(responseJson.message);
           setMy_Alert(true);
         }
-      } else if(err == null) {
+      } else if (err == null) {
         setalert_sms(err);
         setMy_Alert(true);
       }
@@ -404,7 +396,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
         }}
       />
       <ScrollView>
-        <View style={{flex:1, }}>
+        <View style={{flex: 1}}>
           <Text
             style={{
               color: COLORS.Primary_Blue,
@@ -431,7 +423,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
               onChangeText={txt => {
                 setName(txt);
               }}
-              placeholder={'Full Name'}
+              placeholder={'Full Name*'}
             />
           </View>
           <View style={{marginTop: 20}}>
@@ -439,7 +431,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
               onChangeText={txt => {
                 setEmail(txt);
               }}
-              placeholder={'Email Address'}
+              placeholder={'Email Address*'}
             />
             <View
               style={{
@@ -455,7 +447,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
               <TouchableOpacity
                 onPress={() => {
                   if (email == '' || email.trim().length == 0) {
-                    setalert_sms('Please Enter Email');
+                    setalert_sms('Please Enter Email*');
                     setMy_Alert(true);
                   } else {
                     // validateEmail();
@@ -518,7 +510,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
             <MaskInput
               value={mobile}
               keyboardType="phone-pad"
-              placeholder="Phone Number"
+              placeholder="Phone Number*"
               placeholderTextColor={'#CECECE'}
               style={{color: '#000', marginLeft: 15}}
               onChangeText={(masked, unmasked) => {
@@ -576,7 +568,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
               onChangeText={txt => {
                 setpass(txt);
               }}
-              placeholder={'Password'}
+              placeholder={'Password*'}
               secureTextEntry={myeye}
               rightView={
                 <TouchableOpacity
@@ -596,7 +588,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
               onChangeText={txt => {
                 setcpass(txt);
               }}
-              placeholder={'Confirm Password'}
+              placeholder={'Confirm Password*'}
               secureTextEntry={myeye1}
               rightView={
                 <TouchableOpacity
@@ -617,26 +609,24 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
             borderColor={'#83CDFD'}
             onPress={() => {
               SignupPressed();
-              
             }}
             backgroundColor={COLORS.Primary_Blue}
           />
-           <View
-                style={{
-                  top:20,
-                  justifyContent:'center',
-                  alignItems:'center',
-                  flexDirection: 'row',
-                }}>
-                <Text
-                  style={[styles.txtStyle, {color: '#000', fontWeight: '400'}]}>
-                  Already have an account?{' '}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => props.navigation.navigate('Login')}>
-                  <Text style={[styles.signup, {color: '#3DA1E3'}]}> Sign In</Text>
-                </TouchableOpacity>
-              </View>
+          <View
+            style={{
+              top: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text style={[styles.txtStyle, {color: '#000', fontWeight: '400'}]}>
+              Already have an account?{' '}
+            </Text>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate('Login')}>
+              <Text style={[styles.signup, {color: '#3DA1E3'}]}> Sign In</Text>
+            </TouchableOpacity>
+          </View>
           {/* </KeyboardAwareScrollView> */}
           <View
             style={{
@@ -690,18 +680,16 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
               padding: 15,
               borderRadius: 15,
             }}>
-            <TouchableOpacity>
+            <View style={{alignSelf: 'center',  width: 120,
+                  height: 120,marginTop: 20,}}>
               <Image
-                source={images.smileyemoji}
+                source={images.alriightIcon}
                 style={{
-                  alignSelf: 'center',
                   width: 120,
                   height: 120,
-                  resizeMode: 'stretch',
-                  marginTop: 20,
                 }}
               />
-            </TouchableOpacity>
+            </View>
 
             <Text
               style={{
@@ -798,7 +786,7 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
                     }}>
                     Check your email we have sent you a verification code
                   </Text>
-                  <Text
+                  {/* <Text
                     style={{
                       color: '#000',
                       textAlign: 'center',
@@ -808,16 +796,16 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
                       fontWeight: '400',
                     }}>
                     {codeData}
-                  </Text>
+                  </Text> */}
                   <Text
                     style={{
                       color: '#000',
                       marginLeft: 20,
-                      marginTop: 10,
+                      
                       fontSize: 13,
                       fontWeight: '400',
                       alignSelf: 'center',
-                      marginTop: 50,
+                      marginTop: 30,
                     }}>
                     {email}
                   </Text>
@@ -835,6 +823,8 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
                       // shadowRadius: 2,
                       // elevation: 3,
                     }}
+                    placeholderCharacter={'*'}
+                    placeholderTextColor={'#CECECE'}
                     pinCount={4}
                     code={state} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
                     onCodeChanged={code => {
@@ -849,7 +839,9 @@ const[checkOtpValid,setCheckOtpValid]=useState(false);
                   />
                   {checkOtpValid == true ? (
                     <View style={styles.forgotContainer}>
-                      <Text style={[styles.forgotTxt, {marginTop: 10}]}>The OTP entered is incorrect. Please enter correct OTP</Text>
+                      <Text style={[styles.forgotTxt, {marginTop: 10}]}>
+                        The OTP entered is incorrect. Please enter correct OTP
+                      </Text>
                     </View>
                   ) : null}
 
