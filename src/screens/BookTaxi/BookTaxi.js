@@ -46,6 +46,7 @@ import MaskInput from 'react-native-mask-input';
 
 const BookTaxi = props => {
   const user = useSelector(state => state.user.user_details);
+  const ProfileDetail = useSelector(state => state.user.ProfileDetails);
   const [fullName, setFullName] = useState('');
   const [mobile, setMobile] = useState('');
   const [hotelName, setHotelName] = useState('');
@@ -78,6 +79,7 @@ const BookTaxi = props => {
     // );
   }, []);
   // console.log('.........',Object.keys(markedDates)[0]);
+  console.log("ProfileDetail",ProfileDetail?.userid);
   const PostBookingTaxi = async () => {
     setpopup(true);
     console.log('.........',orderTime);
@@ -117,13 +119,14 @@ const BookTaxi = props => {
       formdata.append('drop_location', droploc);
       formdata.append('drop_lat_long', '28.6691565, 77.45375779999999');
       formdata.append('hotel_name', hotelName);
+      formdata.append('user_id',ProfileDetail?.userid != undefined ? ProfileDetail?.userid : '');
 
       console.log('FORMdata print', formdata);
       const {responseJson, err} = await requestPostApi(
         booking_taxi,
         formdata,
         'POST',
-        user.token,
+        '',
       );
       setLoading(false);
       console.log('the res signup==>>', responseJson);

@@ -63,7 +63,7 @@
     "react-native-screens": "^3.27.0",
     "react-native-simple-audio-player": "^1.0.3",
     "react-native-table-component": "^1.2.2",
-    "react-native-vector-icons": "^10.0.1",
+    "react-native-vector-icons": "^10.0.3",
     "react-native-video": "^5.2.1",
     "react-native-video-controls": "^2.8.1",
     "react-native-webview": "^13.6.4",

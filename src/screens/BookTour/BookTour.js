@@ -30,6 +30,7 @@ import {FONTS} from '../../global/Utils';
 
 const BookTour = props => {
   const user = useSelector(state => state.user.user_details);
+  const ProfileDetail = useSelector(state => state.user.ProfileDetails);
   const dispatch = useDispatch();
   const [My_Alert, setMy_Alert] = useState(false);
   const [alert_sms, setalert_sms] = useState('');
@@ -88,14 +89,16 @@ const BookTour = props => {
   useEffect(() => {
     GetBookTourApi();
   }, []);
+  // console.log("ProfileDetail",ProfileDetail?.userid);
   const GetBookTourApi = async () => {
     setLoading(true);
-
-    const {responseJson, err} = await requestGetApi(
+    let formdata = new FormData();
+    formdata.append('user_id', ProfileDetail?.userid);
+    const {responseJson, err} = await requestPostApi(
       get_book_tour,
+      user.userid != undefined ? formdata : '',
+      'POST',
       '',
-      'GET',
-      user.userid != undefined ? user.token : '',
     );
     setLoading(false);
     console.log('the res=PostTourDetails=>>', responseJson);

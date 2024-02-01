@@ -70,7 +70,7 @@ export const requestPostApi = async (endPoint,body,method,token) =>
         let responseJson = await response.json();
         console.log( responseJson)
         return {responseJson:responseJson,err:null}
-      }else if(code == 400 || code == 402 ) ////|| code == 404
+      }else if(code == 400 || code == 402 || code == 404) ////|| code == 404
       {
         let responseJson = await response.json();
         //Completion block 

@@ -46,7 +46,7 @@ const BookTaxiScreen = props => {
     });
     return unsubscribe;
   }, []);
-
+  
   const getBookTaxi = async () => {
     setLoading(true);
     const {responseJson, err} = await requestGetApi(

@@ -461,7 +461,7 @@ const PhotoBoothPurchased = props => {
               txtStyle={{color: '#CECECE', fontSize: 14, fontWeight: '400'}}
               backgroundColor={'#FFFFFF'}
               title={'Purchase At $23.00'}
-              onPress={()=>{ console.log("ONPRESS");
+              onPress={()=>{  
               props.navigation.navigate('PurchaseReview',{type:'photobooth'})
               // <PaymentWebView dispatch={type='photobooth'}/>
             }}

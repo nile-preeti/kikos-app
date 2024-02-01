@@ -22,6 +22,7 @@ import {
   setLoading,
   onLogoutUser,
   saveUserResult,
+  saveUserProfile,
 } from '../../redux/actions/user_action';
 import {WebView} from 'react-native-webview';
 import {dimensions} from '../../utility/Mycolors';
@@ -136,6 +137,7 @@ const CustomDrawer = (props) => {
                 props.navigation.closeDrawer();
                 AsyncStorage.clear();
                 dispatch(onLogoutUser());
+                dispatch(saveUserProfile(null));
               }}
             />
           </View>

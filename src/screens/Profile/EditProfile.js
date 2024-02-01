@@ -53,7 +53,7 @@ const EditProfile = props => {
   const [pass, setPass] = useState('');
   const [modlevisual, setmodlevisual] = useState(false);
   const [picker, setPicker] = useState('');
-  const [image2, setimage2] = useState("");
+  const [image2, setimage2] = useState('');
   const [isimageChange, setisimageChange] = useState(false);
   const [cpass, setcPass] = useState('');
   const [profileimg, setProfileimg] = useState('');
@@ -90,7 +90,7 @@ const EditProfile = props => {
     } else if (mobile == '' || mobile.trim().length == 0) {
       setalert_sms('Please Enter Phone Number');
       setMy_Alert(true);
-    }else if (mobile.trim().length < 10) {
+    } else if (mobile.trim().length < 10) {
       setalert_sms('Please Enter Valid Phone Number');
       setMy_Alert(true);
     } else {
@@ -136,11 +136,15 @@ const EditProfile = props => {
       if (err == null) {
         if (responseJson.status) {
           props.navigation.goBack();
-        } else {
+        }  else {
           setalert_sms(responseJson.message);
           setMy_Alert(true);
         }
-      } else {
+      }else if (responseJson === null) {
+        setalert_sms("The image should be less then 1 mb");
+        setMy_Alert(true);
+      } 
+      else {
         setalert_sms(err);
         setMy_Alert(true);
       }
@@ -207,7 +211,7 @@ const EditProfile = props => {
     }
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7',}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7'}}>
       <CustomHeader
         title={'Edit Profile Details'}
         onBackPress={() => {
@@ -217,30 +221,30 @@ const EditProfile = props => {
           props.navigation.navigate('Notification');
         }}
       />
-      <View style={{alignItems:'center',marginTop:25}}>
-
-     
-      <View style={styles.ImageContainer}>
-        <Image
-          // resizeMode="contain"
-          source={
-            isimageChange
-            ? { uri: image2 }
-            : profileimg
-            ? { uri: profileimg }
-            : require('../../assets/images/largeimages/dummy_profile.png')
-
-          }
-          style={styles.image}
-        />
-      </View>
-      <TouchableOpacity onPress={() => {
+      <View style={{alignItems: 'center', marginTop: 25}}>
+        <View style={styles.ImageContainer}>
+          <Image
+            // resizeMode="contain"
+            source={
+              isimageChange
+                ? {uri: image2}
+                : profileimg
+                ? {uri: profileimg}
+                : require('../../assets/images/largeimages/dummy_profile.png')
+            }
+            style={styles.image}
+          />
+        </View>
+        <TouchableOpacity
+          onPress={() => {
             setmodlevisual(true);
-          }} style={{top:-31,left:31}}>
-        <Image source={require('../../assets/images/Icons/Edit_profile_icon.png')}
-        style={{height:40,width:40}}
-        />
-      </TouchableOpacity>
+          }}
+          style={{top: -31, left: 31}}>
+          <Image
+            source={require('../../assets/images/Icons/Edit_profile_icon.png')}
+            style={{height: 40, width: 40}}
+          />
+        </TouchableOpacity>
       </View>
       <KeyboardAwareScrollView>
         <View style={{marginTop: 0}}>
@@ -294,7 +298,7 @@ const EditProfile = props => {
             shadowOpacity: 0.4,
             shadowRadius: 2,
             elevation: 3,
-            borderRadius:5
+            borderRadius: 5,
           }}>
           <View
             style={{
@@ -399,7 +403,7 @@ const EditProfile = props => {
               }}></Image>
           </View>
         </TouchableOpacity> */}
-<View style={{height:20}}></View>
+        <View style={{height: 20}}></View>
         <CustomButton
           borderColor={'#83CDFD'}
           title={'Update'}
