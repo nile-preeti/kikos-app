@@ -161,7 +161,8 @@ const BookDetails = props => {
         setalert_sms(responseJson.message);
         setMy_Alert(true);
       }
-    } else {
+    } 
+    else {
       setalert_sms(err);
       setMy_Alert(true);
     }
@@ -560,7 +561,7 @@ const BookDetails = props => {
             }}>
             <View
               style={{
-                height: (dimensions.SCREEN_HEIGHT * 62) / 100,
+                height: (dimensions.SCREEN_HEIGHT * 64) / 100,
                 width: dimensions.SCREEN_WIDTH,
                 backgroundColor: '#FBFBFB',
                 position: 'absolute',
@@ -640,11 +641,11 @@ const BookDetails = props => {
                   </Text>
                 </TouchableOpacity>
               </View> */}
-              {console.log(
+              {/* {console.log(
               
                 ';;;;;eventsBookDate.....',
                 selectedDate
-              )}
+              )} */}
               <View style={{width: '100%', marginTop: 10}}>
                 <Calendar
                   minDate={moment().format('YYYY-MM-DD')}

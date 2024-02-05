@@ -9,6 +9,8 @@ import ConfirmedTourScreen from '../screens/Audio/ConfirmedTourScreen';
 import AudioDetails from '../screens/Audio/AudioDetaiils';
 import ProfileStack from './ProfileStack';
 import {createStackNavigator} from '@react-navigation/stack';
+import PaymentWebView from '../components/PaymentWebView';
+import PurchaseReview from '../screens/Purchase/Purchase';
  
 const Stack = createStackNavigator();
 const config = {
@@ -130,7 +132,52 @@ function AudioStack() {
             }
           }
         }} />
-     
+      <Stack.Screen name='PurchaseReview' component={PurchaseReview}  options={{
+          headerShown: false,
+          transitionSpec: {
+            open: config,
+            close: closeConfig
+          },
+          gestureEnabled: true,
+          gestureDirection: 'vertical',
+          cardStyleInterpolator: ({ current, layouts }) => {
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateY: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.height, 0],
+                    }),
+                  },
+                ],
+              },
+            }
+          }
+        }}  />
+     <Stack.Screen name='PaymentWebView' component={PaymentWebView}  options={{
+          headerShown: false,
+          transitionSpec: {
+            open: config,
+            close: closeConfig
+          },
+          gestureEnabled: true,
+          gestureDirection: 'vertical',
+          cardStyleInterpolator: ({ current, layouts }) => {
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateY: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.height, 0],
+                    }),
+                  },
+                ],
+              },
+            }
+          }
+        }}  />
     </Stack.Navigator>
   );
 }

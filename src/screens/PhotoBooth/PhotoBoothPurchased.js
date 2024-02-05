@@ -460,9 +460,9 @@ const PhotoBoothPurchased = props => {
             stle={{width:'90%'}}
               txtStyle={{color: '#CECECE', fontSize: 14, fontWeight: '400'}}
               backgroundColor={'#FFFFFF'}
-              title={'Purchase At $23.00'}
+              title={'Purchase At $' +`${photoBoothDetail?.price}`}
               onPress={()=>{  
-              props.navigation.navigate('PurchaseReview',{type:'photobooth'})
+              props.navigation.navigate('PurchaseReview',{type:'photobooth',amount:photoBoothDetail?.price})
               // <PaymentWebView dispatch={type='photobooth'}/>
             }}
             />

@@ -5,17 +5,19 @@ import {View, Text} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 import HomeScreen from '../screens/Home/HomeScreen';
 import BookDetails from '../screens/Home/BookDetails';
-import BookDetailScreen from '../screens/Home/BookDetailScreen'
+import BookDetailScreen from '../screens/Home/BookDetailScreen';
 import BookAnTour from '../screens/Home/BookAnTour';
 import ReviewBooking from '../screens/Home/ReviewBooking';
 import RequestAFreeCallback from '../screens/Home/RequestAFreeCallback';
- 
+
 import ProfileStack from './ProfileStack';
 import ContactUs from '../screens/ContactUs/ContactUs';
 import {createStackNavigator} from '@react-navigation/stack';
 import MyTour from '../screens/Home/MyTour';
 import ConfirmedTourDetails from '../screens/BookTour/ConfirmedTourDetails';
- 
+import PaymentWebView from '../components/PaymentWebView';
+import PurchaseReview from '../screens/Purchase/Purchase';
+
 const Stack = createStackNavigator();
 const config = {
   animation: 'bounce',
@@ -36,25 +38,28 @@ const closeConfig = {
     direction: 'vertical',
   },
 };
-const forFade = ({ current }) => ({
+const forFade = ({current}) => ({
   cardStyle: {
     opacity: current.progress,
   },
 });
 
-const HomeStack=()=> {
+const HomeStack = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false , cardStyleInterpolator: forFade,}} >
-       <Stack.Screen name="HomeScreen" component={HomeScreen}  
-       options={{
+    <Stack.Navigator
+      screenOptions={{headerShown: false, cardStyleInterpolator: forFade}}>
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -66,18 +71,22 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} />
-      <Stack.Screen name="BookDetails" component={BookDetails}  options={{
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="BookDetails"
+        component={BookDetails}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -89,18 +98,22 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} />
-      <Stack.Screen name="RequestAFreeCallback" component={RequestAFreeCallback}  options={{
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="RequestAFreeCallback"
+        component={RequestAFreeCallback}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -112,18 +125,22 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} />
-     <Stack.Screen name="BookDetailScreen" component={BookDetailScreen}  options={{
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="BookDetailScreen"
+        component={BookDetailScreen}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -135,18 +152,22 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} />
-     <Stack.Screen name="BookAnTour" component={BookAnTour}  options={{
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="BookAnTour"
+        component={BookAnTour}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -158,18 +179,22 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} />
-     <Stack.Screen name="ReviewBooking" component={ReviewBooking}  options={{
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ReviewBooking"
+        component={ReviewBooking}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -181,18 +206,22 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} /> 
-     <Stack.Screen name="Profile" component={ProfileStack}  options={{
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileStack}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -204,18 +233,22 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} />
-     <Stack.Screen name="ContactUs" component={ContactUs}  options={{
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ContactUs"
+        component={ContactUs}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -227,43 +260,49 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} />
-  <Stack.Screen name="MyTour" component={MyTour}  
-  // options={{
-  //         headerShown: false,
-  //         transitionSpec: {
-  //           open: config,
-  //           close: closeConfig
-  //         },
-  //         gestureEnabled: true,
-  //         gestureDirection: 'vertical',
-  //         cardStyleInterpolator: ({ current, layouts }) => {
-  //           return {
-  //             cardStyle: {
-  //               transform: [
-  //                 {
-  //                   translateY: current.progress.interpolate({
-  //                     inputRange: [0, 1],
-  //                     outputRange: [layouts.screen.height, 0],
-  //                   }),
-  //                 },
-  //               ],
-  //             },
-  //           }
-  //         }
-  //       }}
-         />
-         <Stack.Screen name='ConfirmedTourDetails' component={ConfirmedTourDetails}  options={{
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="MyTour"
+        component={MyTour}
+        // options={{
+        //         headerShown: false,
+        //         transitionSpec: {
+        //           open: config,
+        //           close: closeConfig
+        //         },
+        //         gestureEnabled: true,
+        //         gestureDirection: 'vertical',
+        //         cardStyleInterpolator: ({ current, layouts }) => {
+        //           return {
+        //             cardStyle: {
+        //               transform: [
+        //                 {
+        //                   translateY: current.progress.interpolate({
+        //                     inputRange: [0, 1],
+        //                     outputRange: [layouts.screen.height, 0],
+        //                   }),
+        //                 },
+        //               ],
+        //             },
+        //           }
+        //         }
+        //       }}
+      />
+      <Stack.Screen
+        name="ConfirmedTourDetails"
+        component={ConfirmedTourDetails}
+        options={{
           headerShown: false,
           transitionSpec: {
             open: config,
-            close: closeConfig
+            close: closeConfig,
           },
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          cardStyleInterpolator: ({ current, layouts }) => {
+          cardStyleInterpolator: ({current, layouts}) => {
             return {
               cardStyle: {
                 transform: [
@@ -275,9 +314,64 @@ const HomeStack=()=> {
                   },
                 ],
               },
-            }
-          }
-        }} />
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="PurchaseReview"
+        component={PurchaseReview}
+        options={{
+          headerShown: false,
+          transitionSpec: {
+            open: config,
+            close: closeConfig,
+          },
+          gestureEnabled: true,
+          gestureDirection: 'vertical',
+          cardStyleInterpolator: ({current, layouts}) => {
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateY: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.height, 0],
+                    }),
+                  },
+                ],
+              },
+            };
+          },
+        }}
+      />
+      <Stack.Screen
+        name="PaymentWebView"
+        component={PaymentWebView}
+        options={{
+          headerShown: false,
+          transitionSpec: {
+            open: config,
+            close: closeConfig,
+          },
+          gestureEnabled: true,
+          gestureDirection: 'vertical',
+          cardStyleInterpolator: ({current, layouts}) => {
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateY: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.height, 0],
+                    }),
+                  },
+                ],
+              },
+            };
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 };

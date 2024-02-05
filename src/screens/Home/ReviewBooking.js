@@ -97,39 +97,39 @@ const ReviewBooking = props => {
     return amt;
   };
 
-  const BookTourApi = async id => {
-    setLoading(true);
-    let formdata = new FormData();
-    formdata.append('tour_id', id);
-    formdata.append('tour_type', '1'); /*1-Normal Tour, 2:Virtual tour */
-    formdata.append('booking_date', selectedDate);
-    formdata.append('no_adults', counter);
-    formdata.append('no_senior_citizen', counter1);
-    formdata.append('no_childerns', counter2);
-    formdata.append('adults_amount', totaladultamount);
-    formdata.append('senior_amount', totalSeniorAmount);
-    formdata.append('childrens_amount', totalKidsAmount);
-    console.log('FORMADATA>>>>', formdata);
-    const {responseJson, err} = await requestPostApi(
-      booking_tour,
-      formdata,
-      'POST',
-      user.token,
-    );
-    setLoading(false);
-    console.log('the res=BookTourApi=>>', responseJson);
-    if (err == null) {
-      if (responseJson.status == true) {
-        setpopup(true);
-      } else {
-        setalert_sms(responseJson.message);
-        setMy_Alert(true);
-      }
-    } else {
-      setalert_sms(err);
-      setMy_Alert(true);
-    }
-  };
+  // const BookTourApi = async id => {
+  //   setLoading(true);
+  //   let formdata = new FormData();
+  //   formdata.append('tour_id', id);
+  //   formdata.append('tour_type', '1'); /*1-Normal Tour, 2:Virtual tour */
+  //   formdata.append('booking_date', selectedDate);
+  //   formdata.append('no_adults', counter);
+  //   formdata.append('no_senior_citizen', counter1);
+  //   formdata.append('no_childerns', counter2);
+  //   formdata.append('adults_amount', totaladultamount);
+  //   formdata.append('senior_amount', totalSeniorAmount);
+  //   formdata.append('childrens_amount', totalKidsAmount);
+  //   console.log('FORMADATA>>>>', formdata);
+  //   const {responseJson, err} = await requestPostApi(
+  //     booking_tour,
+  //     formdata,
+  //     'POST',
+  //     user.token,
+  //   );
+  //   setLoading(false);
+  //   console.log('the res=BookTourApi=>>', responseJson);
+  //   if (err == null) {
+  //     if (responseJson.status == true) {
+  //       setpopup(true);
+  //     } else {
+  //       setalert_sms(responseJson.message);
+  //       setMy_Alert(true);
+  //     }
+  //   } else {
+  //     setalert_sms(err);
+  //     setMy_Alert(true);
+  //   }
+  // };
 
   return (
     <SafeAreaView style={{backgroundColor: COLORS.Primary_Blue}}>
@@ -425,7 +425,20 @@ const ReviewBooking = props => {
             title={'Pay $' + `${TotalBillAmount()}`}
             onPress={() => {
               // setpopup(true)
-              BookTourApi(props?.route?.params?.TourData?.id);
+              props.navigation.navigate('PurchaseReview', {
+                type: 'reviewbooking',
+                amount:TotalBillAmount(),
+                TourData:props?.route?.params?.TourData,
+                bookid: props?.route?.params?.TourData?.id,
+                selectdate: selectedDate,
+                no_adult: props?.route?.params?.counter,
+                no_senior_citizen: props?.route?.params?.counter1,
+                no_childerns:props?.route?.params?.counter2,
+                adults_amount:totaladultamount,
+                senior_amount:totalSeniorAmount,
+                childrens_amount:totalKidsAmount
+              });
+              // BookTourApi(props?.route?.params?.TourData?.id);
             }}
           />
           <CustomButtonRound

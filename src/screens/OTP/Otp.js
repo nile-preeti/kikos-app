@@ -60,8 +60,7 @@ const Otp = props => {
     } else if (state == '' || state.trim().length == 0) {
       setalert_sms('Please Enter OTP');
       setMy_Alert(true);
-    }  
-    else {
+    } else {
       setLoading(true);
       let formdata = new FormData();
       formdata.append('email', email); //code+
@@ -90,7 +89,6 @@ const Otp = props => {
     }
   };
   const FromForgotPressed = async () => {
-    
     console.log('ENTER OTP TEXT', state);
     if (email == '' || email.trim().length == 0) {
       setalert_sms('Please Enter Email');
@@ -98,12 +96,10 @@ const Otp = props => {
     } else if (state == '' || state.trim().length == 0) {
       setalert_sms('Please Enter OTP');
       setMy_Alert(true);
-    } else if (state === viewOtp ) {
+    } else if (state === viewOtp) {
       setalert_sms('Please Enter Valid Otp');
       setMy_Alert(true);
-    }
-    
-    else {
+    } else {
       setLoading(true);
       let formdata = new FormData();
       formdata.append('email', email); //code+
@@ -120,7 +116,7 @@ const Otp = props => {
       console.log('the res FromForgotPressed==>>', responseJson);
       if (err == null) {
         if (responseJson.status == true) {
-          props.navigation.navigate('SetNewPass',{email:email})
+          props.navigation.navigate('SetNewPass', {email: email});
         } else {
           setalert_sms(responseJson.message);
           setMy_Alert(true);
@@ -215,34 +211,53 @@ const Otp = props => {
           }}>
           Cheehoo! 🤙
         </Text>
-        <View style={{justifyContent:'center',alignItems:'center',width:'92%',marginHorizontal:15}}>
-        <Text 
+        <View
           style={{
-            color: '#000',
-            textAlign: 'center',
-            // marginLeft: 20,
-            // marginTop: 10,
-            fontSize: 14,
-            fontWeight: '400',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '92%',
+            marginHorizontal: 15,
           }}>
-          Check your email we have sent you a verification code on
-           {/* {viewOtp} */}
-        </Text>
+          <Text
+            style={{
+              color: '#000',
+              textAlign: 'center',
+              // marginLeft: 20,
+              marginTop: 10,
+              fontSize: 14,
+              fontWeight: '400',
+              lineHeight: 18,
+            }}>
+            To continue, complete this verification step. We've send a One Time
+            Password (OTP) to the email{' '}
+            <Text
+              style={{
+                color: '#000',
+                // marginLeft: 20,
+                textDecorationLine: 'underline',
+                fontSize: 14,
+                fontWeight: '400',
+                alignSelf: 'center',
+                // marginTop: 30,
+              }}>
+              {email}
+            </Text>
+            . Please enter it below.
+          </Text>
         </View>
-       
 
-        <Text
+        {/* <Text
           style={{
             color: '#000',
             marginLeft: 20,
-          
+
             fontSize: 14,
             fontWeight: '400',
             alignSelf: 'center',
             marginTop: 30,
           }}>
           {email}
-        </Text>
+        </Text> */}
 
         <OTPInputView
           style={{
@@ -272,21 +287,22 @@ const Otp = props => {
           }}
         />
 
-        <TouchableOpacity style={styles.forgotContainer}>
+        <TouchableOpacity style={styles.forgotContainer}
+        onPress={()=>{}}
+        >
           <Text style={[styles.forgotTxt, {marginTop: 10}]}>
             Resend Verification Code
           </Text>
         </TouchableOpacity>
-        <View style={{height:10}}></View>
+        <View style={{height: 10}}></View>
         <CustomButton
           title={'Submit'}
           borderColor={'#83CDFD'}
           onPress={() => {
-          if(props?.route?.params?.from == 'ForgotPass'){
-          FromForgotPressed();
-          }
-          else{
-          LoginPressed();
+            if (props?.route?.params?.from == 'ForgotPass') {
+              FromForgotPressed();
+            } else {
+              LoginPressed();
             }
           }}
           backgroundColor={COLORS.Primary_Blue}

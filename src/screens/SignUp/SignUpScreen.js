@@ -680,8 +680,13 @@ const SignUpScreen = props => {
               padding: 15,
               borderRadius: 15,
             }}>
-            <View style={{alignSelf: 'center',  width: 120,
-                  height: 120,marginTop: 20,}}>
+            <View
+              style={{
+                alignSelf: 'center',
+                width: 120,
+                height: 120,
+                marginTop: 20,
+              }}>
               <Image
                 source={images.alriightIcon}
                 style={{
@@ -764,28 +769,53 @@ const SignUpScreen = props => {
                 <KeyboardAvoidingView
                   style={{flex: 1}}
                   behavior={Platform.OS === 'ios' ? 'padding' : 'height-1'}>
-                  <Text
+                  <View
                     style={{
-                      color: '#000',
-                      // marginLeft: 20,
-                      marginTop: 30,
-                      fontSize: 16,
-                      fontWeight: '700',
-                      textAlign: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '90%',
+                      marginHorizontal: 20,
                     }}>
-                    Cheehoo! 🤙
-                  </Text>
-                  <Text
-                    style={{
-                      color: '#000',
-                      textAlign: 'center',
-                      marginLeft: 20,
-                      // marginTop: 10,
-                      fontSize: 13,
-                      fontWeight: '400',
-                    }}>
-                    Check your email we have sent you a verification code
-                  </Text>
+                    <Text
+                      style={{
+                        color: '#000',
+                        // marginLeft: 20,
+                        marginTop: 30,
+                        fontSize: 18,
+                        fontWeight: '700',
+                        textAlign: 'center',
+                      }}>
+                      {/* Cheehoo! 🤙 */}
+                      Verification required
+                    </Text>
+                    <Text
+                      style={{
+                        color: '#000',
+                        textAlign: 'center',
+                        // marginLeft: 20,
+                        marginTop: 10,
+                        fontSize: 14,
+                        fontWeight: '400',
+                        lineHeight: 18,
+                      }}>
+                      To continue, complete this verification step. We've send a
+                      One Time Password (OTP) to the email{' '}
+                      <Text
+                        style={{
+                          color: '#000',
+                          // marginLeft: 20,
+                          textDecorationLine: 'underline',
+                          fontSize: 14,
+                          fontWeight: '400',
+                          alignSelf: 'center',
+                          // marginTop: 30,
+                        }}>
+                        {email}
+                      </Text>
+                      . Please enter it below.
+                    </Text>
+                  </View>
+
                   {/* <Text
                     style={{
                       color: '#000',
@@ -797,7 +827,7 @@ const SignUpScreen = props => {
                     }}>
                     {codeData}
                   </Text> */}
-                  <Text
+                  {/* <Text
                     style={{
                       color: '#000',
                       marginLeft: 20,
@@ -808,7 +838,7 @@ const SignUpScreen = props => {
                       marginTop: 30,
                     }}>
                     {email}
-                  </Text>
+                  </Text> */}
 
                   <OTPInputView
                     style={{
@@ -844,6 +874,13 @@ const SignUpScreen = props => {
                       </Text>
                     </View>
                   ) : null}
+                  <TouchableOpacity
+                    style={styles.forgotContainer}
+                    onPress={() => {}}>
+                    <Text style={[styles.forgotTxt, {marginTop: 10}]}>
+                      Resend OTP
+                    </Text>
+                  </TouchableOpacity>
 
                   <CustomButton
                     title={'Submit'}

@@ -368,7 +368,7 @@ const AudioDetails = props => {
               txtStyle={{color: '#fff', fontSize: 14, fontWeight: '400'}}
               backgroundColor={COLORS.Primary_Blue}
               title={'Purchase Audio'}
-              onPress={() => {}}
+              onPress={() => {props.navigation.navigate('PurchaseReview',{type:'Audiopurchase',amount:tourDetail?.price})}}
             />
           )}
 

@@ -81,7 +81,7 @@ const BookTaxi = props => {
   // console.log('.........',Object.keys(markedDates)[0]);
   console.log("ProfileDetail",ProfileDetail?.userid);
   const PostBookingTaxi = async () => {
-    setpopup(true);
+    // setpopup(true);
     console.log('.........',orderTime);
     if (Object.keys(markedDates).length == 0) {
       setalert_sms('Please Select Booking Taxi Date*');

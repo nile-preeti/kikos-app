@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   forgotTxt: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '400',
     color: COLORS.Primary_Blue,
     // fontFamily: FONTS.regular,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   forgotContainer: {
     alignSelf: 'center',
-    marginRight: 20,
+    // marginRight: 20,
     marginTop: 10,
   },
   underlineStyleBase: {
