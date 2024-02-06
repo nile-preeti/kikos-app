@@ -10,6 +10,7 @@ import ProfileStack from './ProfileStack';
 import {createStackNavigator} from '@react-navigation/stack';
 import PaymentWebView from '../components/PaymentWebView';
 import PurchaseReview from '../screens/Purchase/Purchase';
+import MyTour from '../screens/Home/MyTour';
  
 const Stack = createStackNavigator();
 const config = {
@@ -132,6 +133,11 @@ function PhotoBoothStack() {
             }
           }
         }}  />
+         <Stack.Screen
+        name="MyTour"
+        component={MyTour}
+        
+      />
         <Stack.Screen name='PurchaseReview' component={PurchaseReview}  options={{
           headerShown: false,
           transitionSpec: {

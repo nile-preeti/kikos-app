@@ -250,6 +250,7 @@ const PhotoBoothPurchased = props => {
   return (
     <SafeAreaView style={{backgroundColor: COLORS.White, flex: 1}}>
       <CustomHeader
+       backarrow={true}
         title={photoBoothDetail?.tour_name}
         onBackPress={() => {
           props.navigation.goBack();

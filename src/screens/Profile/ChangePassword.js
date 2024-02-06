@@ -120,6 +120,7 @@ const ChangePassword = (props) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <CustomHeader
+       backarrow={true}
         title={'Change Password'}
         onBackPress={() => {
           props.navigation.goBack();

@@ -41,7 +41,7 @@ const BookDetailScreen = (props) => {
     <>
     <SafeAreaView style={{backgroundColor: COLORS.Primary_Blue}} />
     <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
-      <CustomHeader title={'North Shore'} onBackPress={()=>{props.navigation.goBack()}} />
+      <CustomHeader  backarrow={true} title={'North Shore'} onBackPress={()=>{props.navigation.goBack()}} />
       <View style={{padding: 20}}>
         <Text style={styles.titleTxt}>North Shore</Text>
         <Text style={styles.forAllTxt}>For All Ages! Great For Families!</Text>

@@ -10,6 +10,7 @@ import BookTaxiScreen from '../screens/BookTaxi/BookTaxiScreen'
 import ProfileStack from './ProfileStack';
 import BookTaxi from '../screens/BookTaxi/BookTaxi';
 import {createStackNavigator} from '@react-navigation/stack';
+import MyTour from '../screens/Home/MyTour';
  
 const Stack = createStackNavigator();
 const config = {
@@ -109,6 +110,11 @@ function BookTaxiStack() {
             }
           }
         }} />
+         <Stack.Screen
+        name="MyTour"
+        component={MyTour}
+        
+      />
       {/* <Stack.Screen name="ServiceDetails" component={ServiceDetails} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="UPloadResume" component={UPloadResume} />

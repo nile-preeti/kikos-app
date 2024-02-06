@@ -24,6 +24,7 @@ import {confirmed_tour, requestGetApi, requestPostApi} from '../../WebApi/Servic
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
 import {useSelector, useDispatch} from 'react-redux';
+import {CommonActions} from '@react-navigation/native';
 
 const MyTour = props => {
   const dispatch = useDispatch();
@@ -73,8 +74,13 @@ const MyTour = props => {
       <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <CustomHeader
           title={'My Tours Booking'}
+          // backarrow={true}
           onBackPress={() => {
-            props.navigation.goBack();
+            // CommonActions.reset({
+            //   index: 1,
+            //   routes: [{name: props.navigation.goBack()}],
+            // });
+            // props.navigation.goBack();
           }}
         />
 
@@ -296,6 +302,7 @@ const MyTour = props => {
                   <View style={[styles.line, {marginTop: 18}]}></View>
 
                   <View style={[styles.bookingIdContainer]}>
+                    <View>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -312,7 +319,21 @@ const MyTour = props => {
                         ${item?.total_amount}
                       </Text>
                     </View>
-
+                    {
+                      item?.status_id != null ?
+                      <Text style={[styles.forAllTxt, {color: item?.status_id == '1'
+                      ? '#4CBA08'
+                      : item?.status_id == '2'
+                      ? '#FF0000'
+                      : '#9C9D9F'}]}>
+                      {' '}
+                      {item?.status}
+                    </Text>
+                    :
+                    null
+                    }
+                    </View>
+                  
                     <TouchableOpacity
                       onPress={() => {
                         setCancellationtext(item?.cancellation_policy);

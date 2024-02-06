@@ -213,6 +213,7 @@ const EditProfile = props => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7'}}>
       <CustomHeader
+       backarrow={true}
         title={'Edit Profile Details'}
         onBackPress={() => {
           props.navigation.goBack();

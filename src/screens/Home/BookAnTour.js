@@ -185,6 +185,7 @@ const [tourdetails, setTourDetail] = useState(props?.route?.params?.TourData);
   return (
     <SafeAreaView style={{backgroundColor: '#EAEDF7', flex: 1, height: '100%'}}>
       <CustomHeader
+       backarrow={true}
         title={'Book A Tour'}
         onBackPress={() => {
           props.navigation.goBack()

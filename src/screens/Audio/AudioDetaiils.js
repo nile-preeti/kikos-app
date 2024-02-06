@@ -93,6 +93,7 @@ const AudioDetails = props => {
   return (
     <SafeAreaView style={{backgroundColor: COLORS.White, flex: 1}}>
       <CustomHeader
+       backarrow={true}
         title={'Virtual Tour Purchased'}
         onBackPress={() => {
           props.navigation.goBack();

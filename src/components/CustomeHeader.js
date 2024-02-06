@@ -9,12 +9,21 @@ const Header = ({
   showNotification,
   onNotificationPress,
   onBackPress,
+  backarrow
 }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
+      {
+        backarrow ?
+        <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
         <Image source={images.arrowleft} style={styles.arrowIcon} />
       </TouchableOpacity>
+      :
+      <View style={styles.backButton}>
+      
+    </View>
+      }
+     
 
       <View style={styles.titleContainer}>
         <Text numberOfLines={1} style={styles.title}>{title}</Text>

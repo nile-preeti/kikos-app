@@ -16,6 +16,7 @@ import ConfirmedTourDetails from '../screens/BookTour/ConfirmedTourDetails';
 import ProfileStack from './ProfileStack';
 import BookDetails from '../screens/Home/BookDetails';
 import {createStackNavigator} from '@react-navigation/stack';
+import MyTour from '../screens/Home/MyTour';
  
 const Stack = createStackNavigator();
 const config = {
@@ -255,7 +256,11 @@ function BookTourStack() {
             }
           }
         }} />
-      
+       <Stack.Screen
+        name="MyTour"
+        component={MyTour}
+        
+      />
     </Stack.Navigator>
   );
 }

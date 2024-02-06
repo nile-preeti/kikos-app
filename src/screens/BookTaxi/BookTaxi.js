@@ -191,6 +191,7 @@ const BookTaxi = props => {
       <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <ScrollView>
           <CustomHeader
+           backarrow={true}
             title={'Book Taxi'}
             onBackPress={() => {
               props.navigation.goBack();

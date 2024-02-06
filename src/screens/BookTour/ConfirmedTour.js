@@ -121,6 +121,7 @@ const ConfirmedTour = props => {
     <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7'}}>
       <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <CustomHeader
+         backarrow={true}
           title={'Booking Tour'}
           onBackPress={() => {
             props.navigation.goBack();
@@ -473,28 +474,37 @@ const ConfirmedTour = props => {
                         <View style={[styles.line, {marginTop: 18}]}></View>
 
                         <View style={[styles.bookingIdContainer]}>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <Text style={styles.bookingIdTxt}>
-                              Amount Paid:
-                            </Text>
-                            <Text
-                              style={[
-                                styles.bookingIdN,
-                                {
-                                  color: '#3DA1E3',
-                                  fontWeight: '700',
-                                  fontSize: 18,
-                                },
-                              ]}>
-                              {' '}
-                              ${item?.total_amount}
-                            </Text>
-                          </View>
+                        <View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={styles.bookingIdTxt}>Amount Paid:</Text>
+                      <Text
+                        style={[
+                          styles.bookingIdN,
+                          {color: '#3DA1E3', fontWeight: '700', fontSize: 18},
+                        ]}>
+                        {' '}
+                        ${item?.total_amount}
+                      </Text>
+                    </View>
+                    {
+                      item?.status_id != null ?
+                      <Text style={[styles.forAllTxt, {color: item?.status_id == '1'
+                      ? '#4CBA08'
+                      : item?.status_id == '2'
+                      ? '#FF0000'
+                      : '#9C9D9F'}]}>
+                      {' '}
+                      {item?.status}
+                    </Text>
+                    :
+                    null
+                    }
+                    </View>
 
                           <TouchableOpacity
                             onPress={() => {
@@ -824,28 +834,37 @@ const ConfirmedTour = props => {
                         <View style={[styles.line, {marginTop: 18}]}></View>
 
                         <View style={[styles.bookingIdContainer]}>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <Text style={styles.bookingIdTxt}>
-                              Amount Paid:
-                            </Text>
-                            <Text
-                              style={[
-                                styles.bookingIdN,
-                                {
-                                  color: '#3DA1E3',
-                                  fontWeight: '700',
-                                  fontSize: 18,
-                                },
-                              ]}>
-                              {' '}
-                              ${item?.total_amount}
-                            </Text>
-                          </View>
+                        <View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={styles.bookingIdTxt}>Amount Paid:</Text>
+                      <Text
+                        style={[
+                          styles.bookingIdN,
+                          {color: '#3DA1E3', fontWeight: '700', fontSize: 18},
+                        ]}>
+                        {' '}
+                        ${item?.total_amount}
+                      </Text>
+                    </View>
+                    {
+                      item?.status_id != null ?
+                      <Text style={[styles.forAllTxt, {color: item?.status_id == '1'
+                      ? '#4CBA08'
+                      : item?.status_id == '2'
+                      ? '#FF0000'
+                      : '#9C9D9F'}]}>
+                      {' '}
+                      {item?.status}
+                    </Text>
+                    :
+                    null
+                    }
+                    </View>
 
                           <TouchableOpacity
                             onPress={() => {
@@ -1181,28 +1200,37 @@ const ConfirmedTour = props => {
                         <View style={[styles.line, {marginTop: 18}]}></View>
 
                         <View style={[styles.bookingIdContainer]}>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <Text style={styles.bookingIdTxt}>
-                              Amount Paid:
-                            </Text>
-                            <Text
-                              style={[
-                                styles.bookingIdN,
-                                {
-                                  color: '#3DA1E3',
-                                  fontWeight: '700',
-                                  fontSize: 18,
-                                },
-                              ]}>
-                              {' '}
-                              ${item?.total_amount}
-                            </Text>
-                          </View>
+                        <View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={styles.bookingIdTxt}>Amount Paid:</Text>
+                      <Text
+                        style={[
+                          styles.bookingIdN,
+                          {color: '#3DA1E3', fontWeight: '700', fontSize: 18},
+                        ]}>
+                        {' '}
+                        ${item?.total_amount}
+                      </Text>
+                    </View>
+                    {
+                      item?.status_id != null ?
+                      <Text style={[styles.forAllTxt, {color: item?.status_id == '1'
+                      ? '#4CBA08'
+                      : item?.status_id == '2'
+                      ? '#FF0000'
+                      : '#9C9D9F'}]}>
+                      {' '}
+                      {item?.status}
+                    </Text>
+                    :
+                    null
+                    }
+                    </View>
 
                           <TouchableOpacity
                             onPress={() => {

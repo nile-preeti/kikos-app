@@ -199,7 +199,7 @@ const PurchaseReview = (props) => {
       console.log("formdata in purchase",formdata);
       const {responseJson, err} = await requestPostApi(payment, formdata, 'POST', '');
 
-      // console.log('the res_payment=>>', responseJson);
+      console.log('the res_payment=>>', responseJson);
       if (err == null) {
         if (responseJson.status == true) {
           gotoPaymentWebView(responseJson.data);
@@ -245,6 +245,7 @@ const PurchaseReview = (props) => {
   return (
     <View style={styles.container}>
       <CustomHeader
+       backarrow={true}
         title={'Payment'}
         onBackPress={() => {
           props.navigation.goBack();

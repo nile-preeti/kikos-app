@@ -79,6 +79,7 @@ import {
       <SafeAreaView style={{backgroundColor: COLORS.Primary_Blue,flex:1}}>
         <View style={{backgroundColor: '#EAEDF7',flex:1}}>
           <CustomHeader
+           backarrow={true}
             title={'Confirmed Tour'}
             onBackPress={() => {
               props.navigation.goBack();
@@ -104,7 +105,7 @@ import {
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                onPress={() => {props.navigation.navigate('ConfirmedTourDetails',{tourId:1})}}
+                // onPress={() => {props.navigation.navigate('ConfirmedTourDetails',{tourId:1})}}
                   style={{
                     alignSelf: 'center',
                     alignItems: 'center',

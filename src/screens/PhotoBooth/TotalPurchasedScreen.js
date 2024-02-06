@@ -61,6 +61,7 @@ import {Photo_BoothPurchase_Listing, home, photo_booth_listing, requestGetApi, r
     return (
       <SafeAreaView style={{backgroundColor: COLORS.White, flex: 1}}>
        <CustomHeader
+        backarrow={true}
             title={'Book A Tour'}
             onBackPress={() => {
               props.navigation.goBack();

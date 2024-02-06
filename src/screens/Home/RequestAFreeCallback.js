@@ -183,6 +183,7 @@ const RequestAFreeCallback = props => {
       <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <ScrollView>
           <CustomHeader
+           backarrow={true}
             title={'Request A Free Callback'}
             onBackPress={() => {
               props.navigation.goBack();

@@ -136,6 +136,7 @@ const ReviewBooking = props => {
       <View style={{backgroundColor: '#EAEDF7'}}>
         <ScrollView>
           <CustomHeader
+           backarrow={true}
             title={'Review Booking'}
             onBackPress={() => {
               props.navigation.goBack();
