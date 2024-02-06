@@ -59,8 +59,8 @@ const PurchaseReview = (props) => {
   const gotoPaymentWebView = url => 
   props?.navigation.navigate('PaymentWebView', {
     url: url,
-    type: props.route.params.type,
-    bookingdata: props.route.params
+    type: props?.route?.params?.type,
+    bookingdata: props?.route?.params
   });
   // const gotoDownloadInvoice = orderId =>
   //   props?.navigation.replace(ScreensName.DOWNLOAD_INVOICE, {orderId: orderId});
@@ -199,7 +199,7 @@ const PurchaseReview = (props) => {
       console.log("formdata in purchase",formdata);
       const {responseJson, err} = await requestPostApi(payment, formdata, 'POST', '');
 
-      console.log('the res_payment=>>', responseJson);
+      // console.log('the res_payment=>>', responseJson);
       if (err == null) {
         if (responseJson.status == true) {
           gotoPaymentWebView(responseJson.data);

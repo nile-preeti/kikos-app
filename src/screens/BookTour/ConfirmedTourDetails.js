@@ -30,7 +30,11 @@ import {Calendar, LocaleConfig, CalendarUtils} from 'react-native-calendars';
 import {ImageSlider, ImageCarousel} from 'react-native-image-slider-banner';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
-import {requestPostApi, tour_details} from '../../WebApi/Service';
+import {
+  confirmed_tour_details,
+  requestPostApi,
+  tour_details,
+} from '../../WebApi/Service';
 import {useSelector, useDispatch} from 'react-redux';
 import {onLogoutUser} from '../../redux/actions/user_action';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -75,12 +79,12 @@ const ConfirmedTourDetails = props => {
     //  else {
     setLoading(true);
     let formdata = new FormData();
-    formdata.append('tour_id', id);
+    formdata.append('booking_id', id);
     const {responseJson, err} = await requestPostApi(
-      tour_details,
+      confirmed_tour_details,
       formdata,
       'POST',
-      '',
+      user.token,
     );
     setLoading(false);
     console.log('the res=PostTourDetails=>>', responseJson);
@@ -133,7 +137,7 @@ const ConfirmedTourDetails = props => {
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#EAEDF7'}}>
-       <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
+      <View style={{flex: 1, backgroundColor: '#EAEDF7'}}>
         <ScrollView>
           <CustomHeader
             title={'North Shore'}
@@ -209,7 +213,10 @@ const ConfirmedTourDetails = props => {
               ) : (
                 <>
                   <Image
-                    style={{height: 400, width: '100%'}}
+                    style={{
+                      height: (dimensions.SCREEN_HEIGHT * 35) / 100,
+                      width: '100%',
+                    }}
                     source={{
                       uri: `${'https://kinengo-dev.s3.us-west-1.amazonaws.com/images/camera-icon.jpg'}`,
                     }}
@@ -223,7 +230,7 @@ const ConfirmedTourDetails = props => {
               alignSelf: 'center',
               alignItems: 'center',
               marginTop: 15,
-              width: '90%',
+              width: '94%',
               backgroundColor: '#fff',
               borderRadius: 10,
               shadowColor: '#000',
@@ -236,11 +243,12 @@ const ConfirmedTourDetails = props => {
             <View style={styles.bookingIdContainer}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={styles.bookingIdTxt}>Booking ID:</Text>
-                <Text style={styles.bookingIdN}>8niudy834</Text>
-                <Image
-                  source={images.document}
-                  style={{marginLeft: 7, marginTop: 3}}
-                />
+                <Text style={styles.bookingIdN}>
+                  {' '}
+                  {tourdetails?.boooking_id != null
+                    ? tourdetails?.boooking_id
+                    : 'not found'}
+                </Text>
               </View>
 
               <View
@@ -249,7 +257,12 @@ const ConfirmedTourDetails = props => {
                   width: 96,
                   borderRadius: 50,
                   flexDirection: 'row',
-                  borderColor: '#4CBA08',
+                  borderColor:
+                    tourdetails?.status_id == '1'
+                      ? '#4CBA08'
+                      : tourdetails?.status_id == '2'
+                      ? '#FF0000'
+                      : '#9C9D9F',
                   borderWidth: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -258,7 +271,12 @@ const ConfirmedTourDetails = props => {
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#4CBA08',
+                    backgroundColor:
+                      tourdetails?.status_id == '1'
+                        ? '#4CBA08'
+                        : tourdetails?.status_id == '2'
+                        ? '#FF0000'
+                        : '#9C9D9F',
                     borderRadius: 100,
                     height: 10,
                     width: 10,
@@ -269,9 +287,14 @@ const ConfirmedTourDetails = props => {
                   style={{
                     fontWeight: '500',
                     fontSize: 12,
-                    color: '#4CBA08',
+                    color:
+                      tourdetails?.status_id == '1'
+                        ? '#4CBA08'
+                        : tourdetails?.status_id == '2'
+                        ? '#FF0000'
+                        : '#9C9D9F',
                   }}>
-                  Accepted
+                  {tourdetails?.status}
                 </Text>
               </View>
             </View>
@@ -292,11 +315,15 @@ const ConfirmedTourDetails = props => {
                   alignItems: 'center',
                   marginTop: 15,
                 }}>
-                <Text style={[styles.bookingIdTxt, {fontSize: 12}]}>
+                <Text
+                  style={[
+                    styles.bookingIdTxt,
+                    {fontSize: 12, fontWeight: 700},
+                  ]}>
                   Amount Paid for tour{' '}
                   <Text
-                    style={{color: '#3DA1E3', fontSize: 12, fontWeight: '400'}}>
-                    $559.00
+                    style={{color: '#3DA1E3', fontSize: 12, fontWeight: '700'}}>
+                    ${tourdetails?.total_amount}
                   </Text>{' '}
                   via Paypal
                 </Text>
@@ -306,16 +333,17 @@ const ConfirmedTourDetails = props => {
                 style={{
                   flexDirection: 'row',
                   marginTop: 10,
-                  justifyContent: 'center',
+                  justifyContent: 'flex-start',
                   alignItems: 'center',
                   width: '97%',
+                  marginLeft: 4,
                 }}>
                 <Text style={[styles.bookingIdTxt, {fontSize: 12}]}>
                   No of People:
                 </Text>
                 <Text style={[styles.bookingIdN, {fontSize: 10}]}>
                   {' '}
-                  03 (02 People 11 & above 01, Children 10 & under)
+                  {tourdetails?.no_of_person}
                 </Text>
               </View>
               <View
@@ -332,14 +360,15 @@ const ConfirmedTourDetails = props => {
                 </Text>
                 <Text style={[styles.bookingIdN, {fontSize: 10}]}>
                   {' '}
-                  19 October, 2023 Saturday
+                  {tourdetails?.selectd_date}
                 </Text>
               </View>
             </View>
           </View>
 
-          <View style={{paddingHorizontal: 20, marginTop: 10}}>
-            <Text style={styles.titleTxt}>{tourdetails?.title}</Text>
+          <View style={{paddingHorizontal: 20, marginTop: 10, marginBottom: 1,justifyContent:'center',}}>
+            <View style={{ height:50}}>
+            <Text style={styles.titleTxt}>{tourdetails?.tour_title}</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
                 style={{width: 12, height: 12, resizeMode: 'stretch'}}
@@ -351,34 +380,67 @@ const ConfirmedTourDetails = props => {
                 {tourdetails?.duration} Hours
               </Text>
             </View>
-            <Text style={styles.forAllTxt}>{tourdetails?.name}</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
-                ${tourdetails?.age_11_price}
-              </Text>
-              <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                {' '}
-                People Ages 11+
-              </Text>
+            <Text style={[styles.forAllTxt, {marginTop: 2}]}>
+              {tourdetails?.name}
+            </Text>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
-                ${tourdetails?.age_60_price}
-              </Text>
-              <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                {' '}
-                Senior Ages 60+
-              </Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
-                ${tourdetails?.under_10_age_price}
-              </Text>
-              <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                {' '}
-                Children Ages 10 & Under
-              </Text>
-            </View>
+           
+          
+            {tourdetails?.same_for_all != '' ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  // marginTop: 10,
+                }}>
+                <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                  ${tourdetails?.same_for_all}
+                </Text>
+                <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                  {' '}
+                  Same for all
+                </Text>
+              </View>
+            ) : (
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    // marginTop: 10,
+                  }}>
+                  <Text
+                    style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                    ${tourdetails?.age_11_price}
+                  </Text>
+                  <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                    {' '}
+                    People Ages 11+
+                  </Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                    ${tourdetails?.age_60_price}
+                  </Text>
+                  <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                    {' '}
+                    Senior Ages 60+
+                  </Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                    ${tourdetails?.under_10_age_price}
+                  </Text>
+                  <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                    {' '}
+                    Children Ages 10 & Under
+                  </Text>
+                </View>
+              </>
+            )}
+
             <Text style={[styles.uploadTxt, {fontWeight: '500'}]}>
               {tourdetails?.short_description}
             </Text>
@@ -389,12 +451,12 @@ const ConfirmedTourDetails = props => {
                 marginTop: 15,
               }}>
               <Image
-                style={{width: 18, height: 18, resizeMode: 'stretch'}}
-                source={require('../../assets/images/Icons/huser.png')}
+                style={{width: 25, height: 25, resizeMode: 'stretch'}}
+                source={require('../../assets/images/Icons/profile-circle-blue.png')}
               />
               <Text style={[styles.uploadTxt, {fontWeight: '600'}]}>
                 {' '}
-                About me
+                Full description
               </Text>
             </View>
             <View
@@ -413,8 +475,8 @@ const ConfirmedTourDetails = props => {
                 marginTop: 15,
               }}>
               <Image
-                style={{width: 18, height: 18, resizeMode: 'stretch'}}
-                source={require('../../assets/images/Icons/document-copy.png')}
+                style={{width: 25, height: 25, resizeMode: 'stretch'}}
+                source={require('../../assets/images/Icons/task-square-blue.png')}
               />
               <Text style={[styles.uploadTxt, {fontWeight: '600'}]}>
                 {' '}
@@ -437,7 +499,7 @@ const ConfirmedTourDetails = props => {
                 marginTop: 15,
               }}>
               <Image
-                style={{width: 18, height: 18, resizeMode: 'stretch'}}
+                style={{width: 25, height: 25, resizeMode: 'stretch'}}
                 source={require('../../assets/images/Icons/noteremove.png')}
               />
               <Text style={[styles.uploadTxt, {fontWeight: '600'}]}>
@@ -470,7 +532,7 @@ const ConfirmedTourDetails = props => {
             <Image tintColor={'black'} source={images.arrowsRight} />
           </TouchableOpacity>
         </View> */}
-          <CustomButtonRound
+          {/* <CustomButtonRound
             txtStyle={{color: '#000', fontSize: 14, fontWeight: '400'}}
             backgroundColor={'#FFF'}
             title={'Request A Free Callback'}
@@ -479,8 +541,8 @@ const ConfirmedTourDetails = props => {
                 tourId: props?.route?.params?.tourId,
               });
             }}
-          />
-          <CustomButtonRound
+          /> */}
+          {/* <CustomButtonRound
             txtStyle={{color: '#fff', fontSize: 14, fontWeight: '400'}}
             backgroundColor={COLORS.Primary_Blue}
             title={'Book Tour'}
@@ -491,7 +553,7 @@ const ConfirmedTourDetails = props => {
                 setModalVisible(true);
               }
             }}
-          />
+          /> */}
           <View style={{height: 20}} />
         </ScrollView>
         {popup ? (
@@ -534,7 +596,7 @@ const ConfirmedTourDetails = props => {
                   fontWeight: '600',
                   textAlign: 'center',
                 }}>
-                Your booking for "tourname"  is successfully submitted
+                Your booking for "tourname" is successfully submitted
               </Text>
               <Text
                 style={{
@@ -769,12 +831,11 @@ const styles = StyleSheet.create({
   },
   titleTxt: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'black',
     fontWeight: '700',
   },
   forAllTxt: {
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '400',
     lineHeight: 20,
     color: '#1F191C',

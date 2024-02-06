@@ -50,7 +50,7 @@ const BookDetails = props => {
   const [selectedDate, setSelectedDate] = useState('');
   const [unavailableDays, setUnavailableDays] = useState({});
   const [availableDays, setavailableDays] = useState({});
-  
+
   const [markedDates, setMarkedDates] = useState({
     ...unavailableDays,
     ...availableDays,
@@ -143,32 +143,43 @@ const BookDetails = props => {
         //     BookDateArr.push({date:responseJson.booked_events[i - 1].date});
         //   }
         const notAvailableDatesObj = {};
-        responseJson.booked_events.forEach((date) => {
-          notAvailableDatesObj[date.date] = { disabled: true, disableTouchEvent: true, selectedColor: '#4CBA08',dotColor: '#4CBA08',marked: false,selected: true, };
+        responseJson.booked_events.forEach(date => {
+          notAvailableDatesObj[date.date] = {
+            disabled: true,
+            disableTouchEvent: true,
+            selectedColor: '#4CBA08',
+            dotColor: '#4CBA08',
+            marked: false,
+            selected: true,
+          };
         });
-          // console.log('the notAvailableDatesObj==>>', notAvailableDatesObj);
-          setUnavailableDays(notAvailableDatesObj);
+        // console.log('the notAvailableDatesObj==>>', notAvailableDatesObj);
+        setUnavailableDays(notAvailableDatesObj);
 
-          const bookedDatesObj = {};
-          responseJson.not_available.forEach((date) => {
-            // console.log('the date==>>', date.date);
-          bookedDatesObj[date.date] = {disabled: true, disableTouchEvent: true, selectedColor: '#9C9D9F',dotColor: '#9C9D9F',marked: false,selected: true,  };
+        const bookedDatesObj = {};
+        responseJson.not_available.forEach(date => {
+          // console.log('the date==>>', date.date);
+          bookedDatesObj[date.date] = {
+            disabled: true,
+            disableTouchEvent: true,
+            selectedColor: '#9C9D9F',
+            dotColor: '#9C9D9F',
+            marked: false,
+            selected: true,
+          };
         });
         // console.log('the bookedDatesObj==>>', bookedDatesObj);
         setavailableDays(bookedDatesObj);
-          
       } else {
         setalert_sms(responseJson.message);
         setMy_Alert(true);
       }
-    } 
-    else {
+    } else {
       setalert_sms(err);
       setMy_Alert(true);
     }
   };
 
-  
   // const handleDayPress = day => {
   //   console.log("Calender Select date:::",day);
   //   // Check if the date is already marked
@@ -215,10 +226,10 @@ const BookDetails = props => {
     // Check if the selected date is booked
     if (!availableDays[day.dateString]) {
       setSelectedDate(day.dateString);
-      } else {
-       const updatedMarkedDates = {...markedDates};
-           delete updatedMarkedDates[day.dateString];
-          setMarkedDates(updatedMarkedDates);
+    } else {
+      const updatedMarkedDates = {...markedDates};
+      delete updatedMarkedDates[day.dateString];
+      setMarkedDates(updatedMarkedDates);
     }
   };
 
@@ -297,61 +308,61 @@ const BookDetails = props => {
             <Text style={[styles.forAllTxt, {marginTop: 2}]}>
               {tourdetails?.name}
             </Text>
-            {
-              tourdetails?.same_for_all != "" ?
+            {tourdetails?.same_for_all != '' ? (
               <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 10,
-              }}>
-              <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
-                ${tourdetails?.same_for_all}
-              </Text>
-              <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                {' '}
-                Same for all
-              </Text>
-            </View>
-            :
-(
-  <>
-  <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 10,
-              }}>
-              <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
-                ${tourdetails?.age_11_price}
-              </Text>
-              <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                {' '}
-                People Ages 11+
-              </Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
-                ${tourdetails?.age_60_price}
-              </Text>
-              <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                {' '}
-                Senior Ages 60+
-              </Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
-                ${tourdetails?.under_10_age_price}
-              </Text>
-              <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
-                {' '}
-                Children Ages 10 & Under
-              </Text>
-            </View>
-  </>
-)
-            }
-            
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 10,
+                }}>
+                <Text style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                  ${tourdetails?.same_for_all}
+                </Text>
+                <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                  {' '}
+                  Same for all
+                </Text>
+              </View>
+            ) : (
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 10,
+                  }}>
+                  <Text
+                    style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                    ${tourdetails?.age_11_price}
+                  </Text>
+                  <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                    {' '}
+                    People Ages 11+
+                  </Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                    ${tourdetails?.age_60_price}
+                  </Text>
+                  <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                    {' '}
+                    Senior Ages 60+
+                  </Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={[styles.forAllTxt, {color: COLORS.Primary_Blue}]}>
+                    ${tourdetails?.under_10_age_price}
+                  </Text>
+                  <Text style={[styles.forAllTxt, {color: '#8F93A0'}]}>
+                    {' '}
+                    Children Ages 10 & Under
+                  </Text>
+                </View>
+              </>
+            )}
+
             <Text
               style={[
                 styles.uploadTxt,
@@ -431,7 +442,7 @@ const BookDetails = props => {
               </Text>
             </View>
           </View>
-         
+
           <TouchableOpacity
             style={{
               height: 60,
@@ -703,17 +714,13 @@ const BookDetails = props => {
                   backgroundColor={COLORS.Primary_Blue}
                   title={'Next'}
                   onPress={() => {
-                    console.log(
-                      'typ edDates',
-                      selectedDate,
-                    );
+                    console.log('typ edDates', selectedDate);
                     if (selectedDate != '') {
-                       props.navigation.navigate('BookAnTour', {
-                          dates: selectedDate,
-                          TourData: tourdetails,
-                        });
-                        setModalVisible(false);
-                      
+                      props.navigation.navigate('BookAnTour', {
+                        dates: selectedDate,
+                        TourData: tourdetails,
+                      });
+                      setModalVisible(false);
                     } else {
                       setModalVisible(false);
                       setalert_sms('Please select booking date');
@@ -774,7 +781,6 @@ const styles = StyleSheet.create({
   },
   titleTxt: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'black',
     fontWeight: '700',
   },

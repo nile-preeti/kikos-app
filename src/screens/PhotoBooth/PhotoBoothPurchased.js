@@ -462,7 +462,7 @@ const PhotoBoothPurchased = props => {
               backgroundColor={'#FFFFFF'}
               title={'Purchase At $' +`${photoBoothDetail?.price}`}
               onPress={()=>{  
-              props.navigation.navigate('PurchaseReview',{type:'photobooth',amount:photoBoothDetail?.price})
+              props.navigation.navigate('PurchaseReview',{type:'photobooth',amount:photoBoothDetail?.price,tour_id:photoBoothDetail?.id})
               // <PaymentWebView dispatch={type='photobooth'}/>
             }}
             />

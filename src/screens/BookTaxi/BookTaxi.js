@@ -52,7 +52,7 @@ const BookTaxi = props => {
   const [hotelName, setHotelName] = useState('');
   const [pickuploc, setPickUpLoc] = useState('');
   const [droploc, setDropLoc] = useState('');
-
+  const [email, setEmail] = useState(user?.email != undefined ? user?.email : '');
   const [My_Alert, setMy_Alert] = useState(false);
   const [alert_sms, setalert_sms] = useState('');
   const [loading, setLoading] = useState(false);
@@ -78,10 +78,12 @@ const BookTaxi = props => {
     //   props?.route?.params?.tourId,
     // );
   }, []);
-  // console.log('.........',Object.keys(markedDates)[0]);
+  console.log('.....USER....',user?.email);
   console.log("ProfileDetail",ProfileDetail?.userid);
   const PostBookingTaxi = async () => {
     // setpopup(true);
+    var EmailReg =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     console.log('.........',orderTime);
     if (Object.keys(markedDates).length == 0) {
       setalert_sms('Please Select Booking Taxi Date*');
@@ -92,7 +94,14 @@ const BookTaxi = props => {
     } else if (fullName == '' || fullName.trim().length == 0) {
       setalert_sms('Please Enter Full Name');
       setMy_Alert(true);
-    }   else if (mobile == '' || mobile.trim().length == 0) {
+    }else if (email == '' || email.trim().length == 0) {
+      setalert_sms('Please Enter Email');
+      setMy_Alert(true);
+    } else if (!EmailReg.test(email)) {
+      setalert_sms('Enter Valid Email');
+      setMy_Alert(true);
+    } 
+      else if (mobile == '' || mobile.trim().length == 0) {
       setalert_sms('Please Enter Phone Number');
       setMy_Alert(true);
     }else if (mobile.trim().length < 10) {
@@ -114,6 +123,7 @@ const BookTaxi = props => {
       formdata.append('booking_date_time', Object.keys(markedDates)[0] +" "+ orderTime);
       formdata.append('mobile', mobile);
       formdata.append('fullname', fullName);
+      formdata,append('email_id', email);
       formdata.append('pickup_location', pickuploc);
       formdata.append('pickup_lat_long', "28.9844618, 77.7064137");
       formdata.append('drop_location', droploc);
@@ -372,6 +382,15 @@ const BookTaxi = props => {
                 setFullName(txt);
               }}
               placeholder={'Full Name*'}
+            />
+          </View>
+          <View style={{marginTop: 13}}>
+            <CustomTextInput
+            value={email}
+              onChangeText={txt => {
+                setEmail(txt);
+              }}
+              placeholder={'Email Address*'}
             />
           </View>
           {/* {console.log('MOBILENO>', mobile)} */}

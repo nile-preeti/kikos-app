@@ -15,7 +15,11 @@ import CustomHeader from '../components/CustomeHeader';
 //third parties
 import {WebView} from 'react-native-webview';
 //global
-import {booking_tour, requestGetApi, requestPostApi} from '../WebApi/Service';
+import {
+  bookingPhotoBooth,
+  booking_tour,
+  requestPostApi,
+} from '../WebApi/Service';
 //redux
 import CustomButton from '../components/CustomButton/CustomButton';
 // import CustomButtonRound from '../components/CustomButton/CustomButtonRound';
@@ -29,18 +33,16 @@ import MyAlert from '../components/MyAlert';
 import images from '../global/images';
 import COLORS from '../global/Colors';
 
-
 const PaymentWebView = props => {
   const user = useSelector(state => state.user.user_details);
   const [My_Alert, setMy_Alert] = useState(false);
+  const [todaydate, settodaydate] = useState(new Date());
   const [alert_sms, setalert_sms] = useState('');
   const [loading, setLoading] = useState(false);
-  const [tourdetails, setTourDetail] = useState(
-    props?.route?.params?.bookingdata?.TourData,
-  );
+  const [tourdetails, setTourDetail] = useState('');
   const [popup, setpopup] = useState(false);
   const [popupsuccess, setpopupsuccess] = useState(false);
-  const[orderID,setOrderID]=useState('123321');
+  const [orderID, setOrderID] = useState('123321');
   //variables : route variables
   const PaymentUrl = props.route.params.url;
   //function : navigation function
@@ -51,30 +53,23 @@ const PaymentWebView = props => {
   const onNavigationStateChange = webViewState => {
     const isSuccessful = webViewState?.url.includes('success');
     const isCanceled = webViewState?.url.includes('cancel');
-    console.log(
-      props.route?.params?.type,
-      'webViewState...',
-      webViewState ,
-    );
+    // console.log(props.route?.params?.type, 'webViewState...', webViewState);
     if (isSuccessful) {
       const isFailed = webViewState?.url.includes('false');
       if (!isFailed) {
-        if (props.route?.params?.type == 'photobooth') {
-          setpopupsuccess(true);
-          // getOrderId(webViewState?.url)
-          
-          // setalert_sms('Payment completed successfully photo booth');
-          // setMy_Alert(true);
-        } else if (props.route?.params?.type == 'reviewbooking') {
+        console.log('Check.........', props?.route?.params?.type);
+        if (props?.route?.params?.type === 'reviewbooking') {
           // console.log("BookTourApi.........",props?.route?.params?.bookingdata);
-          BookTourApi(props?.route?.params?.bookingdata?.bookid);
-        } else if (props.route?.params?.type == 'Audiopurchase') {
-          setpopupsuccess(true);
+          bookTourApi(props?.route?.params?.bookingdata?.bookid);
+        } else if (props?.route?.params?.type === 'photobooth') {
+          // console.log('photobooth.........', props?.route?.params?.bookingdata);
+          bookPhotoBoothApi(props?.route?.params?.bookingdata?.tour_id);
           // getOrderId(webViewState?.url)
-          // setalert_sms('Payment completed successfully from virtual tour');
-          // setMy_Alert(true);
+        } else if (props?.route?.params?.type === 'audiopurchase') {
+          bookVirtualTourApi(props?.route?.params?.bookingdata?.tour_id);
+          // getOrderId(webViewState?.url)
         }
-        console.log('Payment completed successfully');
+        // console.log('Payment completed successfully');
         // setalert_sms('Payment completed successfully');
         // setMy_Alert(true);
         // getOrderId(webViewState?.url);
@@ -102,7 +97,7 @@ const PaymentWebView = props => {
   // const getOrderId = async (url) => {
   //   setLoading(true);
   //   const {responseJson, err} = await requestGetApi(url, '', 'GET', '');
-   
+
   //   console.log('the getOrderId==>>', responseJson);
   //   if (err == null) {
   //     if (responseJson.status == true) {
@@ -118,7 +113,7 @@ const PaymentWebView = props => {
   //   }
   //   setLoading(false);
   // };
-  const BookTourApi = async id => {
+  const bookTourApi = async id => {
     setLoading(true);
     let formdata = new FormData();
     formdata.append('tour_id', id);
@@ -148,6 +143,7 @@ const PaymentWebView = props => {
       'childrens_amount',
       props?.route?.params?.bookingdata?.childrens_amount,
     );
+    formdata.append('amount', '');
     console.log('FORMADATA>>>>', formdata);
     const {responseJson, err} = await requestPostApi(
       booking_tour,
@@ -155,7 +151,7 @@ const PaymentWebView = props => {
       'POST',
       user.token,
     );
-    setLoading(false);
+
     console.log('the res=BookTourApi=>>', responseJson);
     if (err == null) {
       if (responseJson.status == true) {
@@ -168,6 +164,85 @@ const PaymentWebView = props => {
       setalert_sms(err);
       setMy_Alert(true);
     }
+    setLoading(false);
+  };
+  const bookVirtualTourApi = async id => {
+    setLoading(true);
+    console.log(
+      id,
+      'API CALIING BookVirtualTourApi----',
+      props?.route?.params?.bookingdata,
+    );
+
+    let formdata = new FormData();
+    formdata.append('tour_id', id);
+    formdata.append('tour_type', '2'); /*1-Normal Tour, 2:Virtual tour */
+    formdata.append('booking_date', todaydate.slice(0, 9));
+    formdata.append('no_adults', '');
+    formdata.append('no_senior_citizen', '');
+    formdata.append('no_childerns', '');
+    formdata.append('adults_amount', '');
+    formdata.append('senior_amount', '');
+    formdata.append('childrens_amount', '');
+    formdata.append('amount', props?.route?.params?.bookingdata?.amount);
+    console.log('BookVirtualTourApi-FORMADATA>>>>', formdata);
+    const {responseJson, err} = await requestPostApi(
+      booking_tour,
+      formdata,
+      'POST',
+      user.token,
+    );
+
+    console.log('the res=BookVirtualTourApi=>>', responseJson);
+    if (err == null) {
+      if (responseJson.status == true) {
+        setTourDetail(responseJson?.booking_id);
+        setpopupsuccess(true);
+      } else {
+        setalert_sms(responseJson.message);
+        setMy_Alert(true);
+      }
+    } else {
+      setalert_sms(err);
+      setMy_Alert(true);
+    }
+    setLoading(false);
+  };
+  const bookPhotoBoothApi = async id => {
+    setLoading(true);
+    console.log(
+      id,
+      'API CALIING BookPhotoBoothApi----',
+      props?.route?.params?.bookingdata,
+    );
+    
+    let formdata = new FormData();
+    formdata.append('photo_booth_id', id);
+    formdata.append('tour_type', '3');
+    formdata.append('booking_date', todaydate.slice(0, 9));
+    formdata.append('amount', props?.route?.params?.bookingdata?.amount);
+    console.warn('BookPhotoBoothApi--FORMADATA>>>>', formdata);
+    const {responseJson, err} = await requestPostApi(
+      bookingPhotoBooth,
+      formdata,
+      'POST',
+      user.token,
+    );
+
+    console.log('the res=bookingPhotoBooth=>>', responseJson);
+    if (err == null) {
+      if (responseJson.status == true) {
+        setTourDetail(responseJson?.booking_id);
+        setpopupsuccess(true);
+      } else {
+        setalert_sms(responseJson.message);
+        setMy_Alert(true);
+      }
+    } else {
+      setalert_sms(err);
+      setMy_Alert(true);
+    }
+    setLoading(false);
   };
 
   const debugging = `
@@ -295,7 +370,7 @@ const PaymentWebView = props => {
                   screen: 'MyTour',
                   params: {},
                 });
-              
+
                 setpopup(false);
               }}
               backgroundColor={COLORS.Primary_Blue}
@@ -388,7 +463,7 @@ const PaymentWebView = props => {
           }}
         />
       ) : null}
-      {/* {loading ? <Loader /> : null} */}
+      {loading ? <Loader /> : null}
     </View>
   );
 };

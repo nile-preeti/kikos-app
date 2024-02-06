@@ -24,7 +24,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {setLoading, saveUserResult} from '../../redux/actions/user_action';
 import Loader from '../../WebApi/Loader';
 import MyAlert from '../../components/MyAlert';
-import {baseUrl, login, requestPostApi, verify_otp} from '../../WebApi/Service';
+import {baseUrl, forgotPassword, login, requestPostApi, send_otp, verify_otp} from '../../WebApi/Service';
 import MyHeader from '../../components/MyHeader';
 import {dimensions} from '../../utility/Mycolors';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
@@ -180,7 +180,46 @@ const Otp = props => {
     AsyncStorage.setItem('kikos', JSON.stringify(data));
     dispatch(saveUserResult(data));
   };
+  const ResendOtp = async () => {
+    var EmailReg =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+    if (email == '' || email.trim().length == 0) {
+      setalert_sms('Please Enter Email');
+      setMy_Alert(true);
+    } else if (!EmailReg.test(email)) {
+      setalert_sms('Enter Valid Email');
+      setMy_Alert(true);
+    } else {
+      setLoading(true);
+      let formdata = new FormData();
+      formdata.append('email', email);
+
+      const {responseJson, err} = await requestPostApi(
+        send_otp,
+        formdata,
+        'POST',
+        '',
+      );
+      setLoading(false);
+      // console.log('the res sendotp==>>', responseJson);
+      if (err == null) {
+        if (responseJson.status == true) {
+         
+        } else {
+          console.log('Error', responseJson.message);
+          setalert_sms(responseJson.message);
+          setMy_Alert(true);
+        }
+      } else if (err == null) {
+        setalert_sms(err);
+        setMy_Alert(true);
+      } else {
+        setalert_sms(err);
+        setMy_Alert(true);
+      }
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff'}}>
       <MyHeader
@@ -288,7 +327,7 @@ const Otp = props => {
         />
 
         <TouchableOpacity style={styles.forgotContainer}
-        onPress={()=>{}}
+        onPress={()=>{ResendOtp();}}
         >
           <Text style={[styles.forgotTxt, {marginTop: 10}]}>
             Resend Verification Code

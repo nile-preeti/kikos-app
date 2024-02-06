@@ -88,9 +88,9 @@ const MyTour = props => {
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    // props.navigation.navigate('ConfirmedTourDetails', {
-                    //   tourId: item?.id,
-                    // });
+                    props.navigation.navigate('ConfirmedTourDetails', {
+                      tourId: item?.id,
+                    });
                   }}
                   style={{
                     alignSelf: 'center',

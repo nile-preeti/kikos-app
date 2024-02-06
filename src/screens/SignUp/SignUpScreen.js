@@ -115,16 +115,16 @@ const SignUpScreen = props => {
     // getCountry()
   }, []);
 
-  const validateEmail = () => {
-    const regex =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!regex.test(email)) {
-      setalert_sms('Invalid Email Address');
-      setMy_Alert(true);
-    } else {
-      SendotpApi();
-    }
-  };
+  // const validateEmail = () => {
+  //   const regex =
+  //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  //   if (!regex.test(email)) {
+  //     setalert_sms('Invalid Email Address');
+  //     setMy_Alert(true);
+  //   } else {
+  //     SendotpApi();
+  //   }
+  // };
 
   const dateformates = (month, day, year) => {
     if (month == 'Jan') {
@@ -876,7 +876,7 @@ const SignUpScreen = props => {
                   ) : null}
                   <TouchableOpacity
                     style={styles.forgotContainer}
-                    onPress={() => {}}>
+                    onPress={() => {SendotpApi()}}>
                     <Text style={[styles.forgotTxt, {marginTop: 10}]}>
                       Resend OTP
                     </Text>

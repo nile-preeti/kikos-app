@@ -29,6 +29,8 @@ export const timezone_list = 'TimeZoneList';
 export const Photo_BoothPurchase_Listing = 'Photo-BoothPurchase-Listing';
 export const confirmed_tour='confirmed-tour';
 export const payment='pay';
+export const confirmed_tour_details = 'confirmed-tour-detail';
+export const bookingPhotoBooth = 'bookingPhotoBooth';
 
 export const verify_otp_res = 'apicontroller/verify_otp_res'
 export const facilities = 'apicontroller/facilities'
